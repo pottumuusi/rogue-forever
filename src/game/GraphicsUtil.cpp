@@ -21,7 +21,6 @@ void GraphicsUtil::generateTiles(spritesheet_pool& spritesheet_pool, tile_pool& 
     spritesheet_tile_width = -1;
     spritesheet_width = -1;
 
-    Log::d("clearing tile_pool");
     tile_pool.clear();
 
     for (Spritesheet& spritesheet : spritesheet_pool) {
@@ -32,7 +31,6 @@ void GraphicsUtil::generateTiles(spritesheet_pool& spritesheet_pool, tile_pool& 
             throw std::runtime_error("Top level tmj JSON value is not an object");
         }
 
-        Log::d("getting tile height and width");
         spritesheet_tile_height = tmj["tileheight"];
         spritesheet_tile_width = tmj["tilewidth"];
 
