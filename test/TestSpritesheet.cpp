@@ -21,18 +21,18 @@ TEST_F(TestSpritesheet, SpritesheetGetsFirstgid)
     spritesheet_pool spritesheet_pool;
     Map testMap = Map("test_data/map2_16x16_redone.tmj");
 
-    GraphicsUtil::loadSpritesheets(spritesheet_pool, testMap);
+    GraphicsUtil::load_spritesheets(spritesheet_pool, testMap);
 
     Spritesheet& testSpritesheet = spritesheet_pool[0];
 
     for (Spritesheet& s : spritesheet_pool) {
-        if (0 == s.getName().compare("dc-misc-collection-spritesheet")) {
+        if (0 == s.get_name().compare("dc-misc-collection-spritesheet")) {
             testSpritesheet = s;
             break;
         }
     }
 
-    EXPECT_EQ(testSpritesheet.getTiledFirstgid(), 560);
+    EXPECT_EQ(testSpritesheet.get_tiled_firstgid(), 560);
 }
 
 TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
@@ -43,18 +43,18 @@ TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
 
     Map test_map = Map("test_data/map2_16x16_redone.tmj");
 
-    GraphicsUtil::loadSpritesheets(spritesheet_pool, test_map);
+    GraphicsUtil::load_spritesheets(spritesheet_pool, test_map);
 
     Spritesheet& test_spritesheet = spritesheet_pool[0];
 
     for (Spritesheet& s : spritesheet_pool) {
-        if (0 == s.getName().compare("dc-mon-collection-spritesheet")) {
+        if (0 == s.get_name().compare("dc-mon-collection-spritesheet")) {
             test_spritesheet = s;
             break;
         }
     }
 
-    tmj = test_spritesheet.getJson();
+    tmj = test_spritesheet.get_json();
 
     auto layers_array = tmj["layers"];
 
@@ -72,18 +72,18 @@ TEST_F(TestSpritesheet, MonSpritesheetDataIndex82Gives83)
 
     tmj = {};
 
-    GraphicsUtil::loadSpritesheets(spritesheet_pool, test_map);
+    GraphicsUtil::load_spritesheets(spritesheet_pool, test_map);
 
     Spritesheet& test_spritesheet = spritesheet_pool[0];
 
     for (Spritesheet& s : spritesheet_pool) {
-        if (0 == s.getName().compare("dc-mon-collection-spritesheet")) {
+        if (0 == s.get_name().compare("dc-mon-collection-spritesheet")) {
             test_spritesheet = s;
             break;
         }
     }
 
-    tmj = test_spritesheet.getJson();
+    tmj = test_spritesheet.get_json();
     auto layers_array = tmj["layers"];
     layer = layers_array[0];
     auto data_array = layer["data"];

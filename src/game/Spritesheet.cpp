@@ -35,6 +35,12 @@ Spritesheet::Spritesheet(std::string _name, Map& map)
     fetch_firstgid(map);
 }
 #elif BUILD_FOR_TESTS
+Spritesheet::Spritesheet(std::string _name)
+    : name {_name}
+{
+    load_json(Assets::testDataDir + "/" + name + ".tmj");
+    tiledFirstgid = -1;
+}
 Spritesheet::Spritesheet(std::string _name, Map& map)
 	: name {_name}
 {
