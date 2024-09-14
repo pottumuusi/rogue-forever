@@ -6,7 +6,7 @@
 
 #include "Log.hpp"
 
-void GraphicsUtil::generateTiles(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
+void GraphicsUtil::generate_tiles_main(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
 {
     int spritesheet_tile_height;
     int spritesheet_tile_width;
@@ -24,8 +24,8 @@ void GraphicsUtil::generateTiles(spritesheet_pool& spritesheet_pool, tile_pool& 
     tile_pool.clear();
 
     for (Spritesheet& spritesheet : spritesheet_pool) {
-        tmj = spritesheet.getJson();
-        texture_spritesheet = spritesheet.getTexture();
+        tmj = spritesheet.get_json();
+        texture_spritesheet = spritesheet.get_texture();
 
         if ( ! tmj.is_object()) {
             throw std::runtime_error("Top level tmj JSON value is not an object");
@@ -50,7 +50,7 @@ void GraphicsUtil::generateTiles(spritesheet_pool& spritesheet_pool, tile_pool& 
         for (auto data_item : data_array) {
             // ID for spritesheet and GID for whole map
             unsigned int tiled_id = data_item;
-            unsigned int tiled_gid = spritesheet.getTiledFirstgid() - 1 + tiled_id;
+            unsigned int tiled_gid = spritesheet.get_tiled_firstgid() - 1 + tiled_id;
 
             if (0 == tiled_id) {
                 break;
@@ -88,7 +88,70 @@ void GraphicsUtil::generateTiles(spritesheet_pool& spritesheet_pool, tile_pool& 
     }
 }
 
-void GraphicsUtil::loadSpritesheets(spritesheet_pool& spritesheet_pool, Map& map)
+void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_pool& tile_pool_player)
+{
+    int spritesheet_tile_height;
+    int spritesheet_tile_width;
+    int spritesheet_width;
+
+    nlohmann::json tmj;
+    nlohmann::json item;
+
+    std::shared_ptr<SDL_Texture> texture_spritesheet;
+
+    (void) spritesheet_player;
+    (void) tile_pool_player;
+
+    spritesheet_tile_height = -1;
+    spritesheet_tile_width = -1;
+    spritesheet_width = -1;
+
+    tmj = spritesheet_player.get_json();
+    texture_spritesheet = spritesheet_player.get_texture();
+
+    if ( ! tmj.is_object()) {
+        throw std::runtime_error("Top level player tmj JSON value is not an object");
+    }
+
+    spritesheet_tile_height = tmj["tileheight"];
+    spritesheet_tile_width = tmj["tilewidth"];
+
+    if (32 != spritesheet_tile_height || 32 != spritesheet_tile_width) {
+        throw std::runtime_error("Player spritesheet tile size is not 32x32");
+    }
+
+    auto layers_array = tmj["layers"];
+    if (1 != layers_array.size()) {
+        throw std::runtime_error("Player spritesheet JSON does not contain 1 layer");
+    }
+
+    item = layers_array[0];
+    auto data_array = item["data"];
+    spritesheet_width = item["width"];
+
+    for (auto data_item : data_array) {
+        unsigned int tiled_id = data_item;
+
+        if (0 == tiled_id) {
+            break;
+        }
+
+        const int x = (tiled_id - 1) % spritesheet_width;
+        const int y = (tiled_id - 1) / spritesheet_width;
+
+        tile_pool_player[tiled_id] = Tile(
+            "namePlaceholder",
+            texture_spritesheet,
+            x * g_constants::TILE_WIDTH,
+            y * g_constants::TILE_HEIGHT,
+            g_constants::TILE_WIDTH,
+            g_constants::TILE_HEIGHT,
+            tiled_id
+        );
+    }
+}
+
+void GraphicsUtil::load_spritesheets(spritesheet_pool& spritesheet_pool, Map& map)
 {
     nlohmann::json tmj;
 
@@ -116,6 +179,16 @@ void GraphicsUtil::loadSpritesheets(spritesheet_pool& spritesheet_pool, Map& map
             }
         }
     }
+}
+
+void GraphicsUtil::load_spritesheet_player(Spritesheet& spritesheet_player)
+{
+    (void) spritesheet_player;
+
+    std::string spritesheet_name =
+        Spritesheet::spritesheet_names[Spritesheet::spritesheet_name_player];
+
+    spritesheet_player = Spritesheet(spritesheet_name);
 }
 
 // Keeping as a reference for using std::filesystem

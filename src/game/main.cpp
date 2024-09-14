@@ -155,6 +155,15 @@ void renderScreenTilesLayers(
     }
 }
 
+void render_player(Sdlw& sdlw, tile_pool& tile_pool_player)
+{
+    renderTile(
+        sdlw,
+        &(tile_pool_player[1]),
+        0,
+        0);
+}
+
 #if DEBUG_VERBOSE
 void printScreenTilesLayers(screen_tiles_layers& screenTilesLayers)
 {
@@ -200,9 +209,9 @@ void printConstructedSpritesheets(const spritesheet_pool& spritesheetPool)
 {
     for (const Spritesheet& spritesheet : spritesheetPool) {
         std::string msg = "Constructed spritesheet: ";
-        msg += spritesheet.getName();
+        msg += spritesheet.get_name();
         msg += " (";
-        msg += std::to_string(spritesheet.getTiledFirstgid());
+        msg += std::to_string(spritesheet.get_tiled_firstgid());
         msg += ")";
         Log::d(msg);
     }
@@ -222,15 +231,19 @@ void game(void)
 
     SDL_Event event;
 
-    tile_pool tilePool;
+    tile_pool tile_pool_main;
+    tile_pool tile_pool_player;
     tile_id_map tileIdMap;
     texture_pool texturePool;
     spritesheet_pool spritesheetPool;
+    Spritesheet spritesheet_player;
 
     screen_tiles_layers screenTilesLayers;
 
     (void) tileIdMap;
     (void) texturePool;
+
+    spritesheet_player = {};
 
     // TODO check file existence
 
@@ -248,7 +261,8 @@ void game(void)
     }
 
     Log::i("Loading spritesheets");
-    GraphicsUtil::loadSpritesheets(spritesheetPool, currentMap);
+    GraphicsUtil::load_spritesheets(spritesheetPool, currentMap);
+    GraphicsUtil::load_spritesheet_player(spritesheet_player);
 
 #if DEBUG
     printConstructedSpritesheets(spritesheetPool);
@@ -256,7 +270,8 @@ void game(void)
 
     Log::i("Generating tiles");
     try {
-        GraphicsUtil::generateTiles(spritesheetPool, tilePool);
+        GraphicsUtil::generate_tiles_main(spritesheetPool, tile_pool_main);
+        GraphicsUtil::generate_tiles_player(spritesheet_player, tile_pool_player);
     } catch (std::exception const& e) {
         std::string msg = "Exception while generating tiles from spritesheets: ";
         msg += e.what();
@@ -266,7 +281,7 @@ void game(void)
     }
 
 #if DEBUG_VERBOSE
-    printTilesFromTilePool(tilePool);
+    printTilesFromTilePool(tile_pool_main);
 #endif
 
     Log::i("Entering main loop");
@@ -281,7 +296,7 @@ void game(void)
 
         sdlw.renderClear();
 
-        fillScreenTiles(tilePool,
+        fillScreenTiles(tile_pool_main,
 			currentMap,
 			cameraX,
 			cameraY,
@@ -292,6 +307,7 @@ void game(void)
 #endif
 
         renderScreenTilesLayers(sdlw, screenTilesLayers);
+        render_player(sdlw, tile_pool_player);
 
         sdlw.renderPresent();
 

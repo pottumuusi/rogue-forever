@@ -17,42 +17,55 @@ const std::array<std::string, SPRITESHEET_POOL_SIZE> Spritesheet::spritesheet_na
     "spells-collection-spritesheet",
 };
 
+const int Spritesheet::spritesheet_name_player = 6;
+
 #if GRAPHICS_ENABLED
+Spritesheet::Spritesheet(std::string _name)
+    : name {_name}
+{
+    load_texture(Assets::spritesheetsDir + "/" + name + ".png");
+    load_json(Assets::spritesheetsDir + "/" + name + ".tmj");
+    tiledFirstgid = -1;
+}
 Spritesheet::Spritesheet(std::string _name, Map& map)
 	: name {_name}
 {
-    loadTexture(Assets::spritesheetsDir + "/" + name + ".png");
-    loadJson(Assets::spritesheetsDir + "/" + name + ".tmj");
-    fetchFirstgid(map);
+    load_texture(Assets::spritesheetsDir + "/" + name + ".png");
+    load_json(Assets::spritesheetsDir + "/" + name + ".tmj");
+    fetch_firstgid(map);
 }
 #elif BUILD_FOR_TESTS
 Spritesheet::Spritesheet(std::string _name, Map& map)
 	: name {_name}
 {
-    loadJson(Assets::testDataDir + "/" + name + ".tmj");
-    fetchFirstgid(map);
+    load_json(Assets::testDataDir + "/" + name + ".tmj");
+    fetch_firstgid(map);
 }
 #else
 #error "Unknown build type"
 #endif
 
-std::string Spritesheet::getName(void) const
+std::string Spritesheet::get_name(void) const
 {
     return name;
 }
 
-std::shared_ptr<SDL_Texture> Spritesheet::getTexture(void)
+std::shared_ptr<SDL_Texture> Spritesheet::get_texture(void)
 {
     return texture;
 }
 
-nlohmann::json Spritesheet::getJson(void)
+nlohmann::json Spritesheet::get_json(void)
 {
     return json;
 }
 
-int Spritesheet::getTiledFirstgid(void) const
+int Spritesheet::get_tiled_firstgid(void) const
 {
+    if (-1 == tiledFirstgid) {
+        throw std::runtime_error("Tiled first GID not set for spritesheet");
+    }
+
     return tiledFirstgid;
 }
 
@@ -61,7 +74,7 @@ void Spritesheet::set_tiled_firstgid(int new_tiled_firstgid)
     tiledFirstgid = new_tiled_firstgid;
 }
 
-void Spritesheet::loadTexture(std::string pathImage)
+void Spritesheet::load_texture(std::string pathImage)
 {
     Sdlw& sdlw = Sdlw::getReference();
 
@@ -71,12 +84,12 @@ void Spritesheet::loadTexture(std::string pathImage)
     }
 }
 
-void Spritesheet::loadJson(std::string pathJson)
+void Spritesheet::load_json(std::string pathJson)
 {
     json = Json::readFromFile(pathJson);
 }
 
-void Spritesheet::fetchFirstgid(Map& map)
+void Spritesheet::fetch_firstgid(Map& map)
 {
     int tilesets_array_size;
 
@@ -85,7 +98,7 @@ void Spritesheet::fetchFirstgid(Map& map)
     nlohmann::json tmj;
     nlohmann::json tileset;
 
-    const std::string spritesheet_name = getName();
+    const std::string spritesheet_name = get_name();
 
     tilesets_array_size = -1;
     tileset_source_str = "N/A";
