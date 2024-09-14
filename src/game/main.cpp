@@ -8,7 +8,6 @@
 #include "Constants.hpp"
 #include "GraphicsUtil.hpp"
 #include "Json.hpp"
-#include "Level.hpp"
 #include "Log.hpp"
 #include "Map.hpp"
 #include "Sdlw.hpp"
