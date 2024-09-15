@@ -1,9 +1,11 @@
 SRC_GAME_DIR := src/game
+SRC_EXTERNAL_DIR := external/src
 HEADERS_GAME_DIR := include
 SRC_TEST_DIR := test
 
 SRC_GAME := \
-	    $(shell find $(SRC_GAME_DIR)/ -name "*.cpp")
+	    $(shell find $(SRC_GAME_DIR)/ -name "*.cpp") \
+	    $(SRC_EXTERNAL_DIR)/pugixml/pugixml.cpp
 HEADERS_GAME := $(shell find $(HEADERS_GAME_DIR)/ -name "*.hpp")
 SRC_TEST := \
 	    $(filter-out $(SRC_GAME_DIR)/main.cpp, $(SRC_GAME)) \
