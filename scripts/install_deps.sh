@@ -12,6 +12,7 @@ readonly INSTALL_NLOHMANNJSON="TRUE"
 readonly INSTALL_WGET="TRUE"
 readonly INSTALL_GIT="TRUE"
 readonly INSTALL_UNZIP="TRUE"
+readonly INSTALL_PUGIXML="TRUE"
 
 main() {
     if [ ! -d deps_install_workarea ] ; then
@@ -75,6 +76,12 @@ main() {
     if [ ! -d external ] ; then
         mkdir external
     fi
+    if [ ! -d external/include ] ; then
+        mkdir external/include
+    fi
+    if [ ! -d external/src ] ; then
+        mkdir external/src
+    fi
     popd # ../
 
     if [ "TRUE" == "${INSTALL_CJSON}" ] ; then
@@ -83,6 +90,10 @@ main() {
 
     if [ "TRUE" == "${INSTALL_NLOHMANNJSON}" ] ; then
         install_nlohmannjson
+    fi
+
+    if [ "TRUE" == "${INSTALL_PUGIXML}" ] ; then
+        install_pugixml
     fi
 
     pushd ./deps_install_workarea
@@ -124,6 +135,30 @@ install_nlohmannjson() {
 
     popd # nlohmann
     popd # ../external
+}
+
+install_pugixml() {
+    pushd ../external/
+
+    if [ ! -d include/pugixml ] ; then
+        mkdir include/pugixml
+    fi
+
+    if [ ! -d src/pugixml ] ; then
+        mkdir src/pugixml
+    fi
+
+    wget https://github.com/zeux/pugixml/releases/download/v1.14/pugixml-1.14.zip
+    unzip pugixml-1.14.zip
+
+    cp pugixml-1.14/src/pugixml.hpp ./include/pugixml/
+    cp pugixml-1.14/src/pugiconfig.hpp ./include/pugixml/
+    cp pugixml-1.14/src/pugixml.cpp ./src/pugixml/
+
+    rm -r pugixml-1.14
+    rm pugixml-1.14.zip
+
+    popd # ../external/
 }
 
 cd $(dirname $0)
