@@ -14,7 +14,7 @@ SRC_SERVER_ROUTE_TEST_CLIENT := src/server_route/test_client.cpp
 
 CC := g++
 CC_MINGW := x86_64-w64-mingw32-g++
-INCLUDES := -Iinclude -Iexternal
+INCLUDES := -Iinclude -Iexternal/include
 INCLUDES_TEST := -I/opt/gtest/include/
 COMMON_COMPILER_FLAGS := $(INCLUDES) -Wall -Wextra -Wpedantic -std=c++17
 COMPILER_FLAGS_GAME := \
