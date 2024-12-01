@@ -12,6 +12,26 @@ Tile::Tile(
         const int _sheetY,
         const int _sheetW,
         const int _sheetH,
+        const int _tiledId)
+        :
+            name{_name},
+            sheetTexture{_texture},
+            sheetX{_sheetX},
+            sheetY{_sheetY},
+            sheetW{_sheetW},
+            sheetH{_sheetH},
+            tiledId{_tiledId}
+{
+    tiledGid = -1;
+}
+
+Tile::Tile(
+        std::string _name,
+        std::shared_ptr<SDL_Texture> _texture,
+        const int _sheetX,
+        const int _sheetY,
+        const int _sheetW,
+        const int _sheetH,
         const int _tiledGid,
         const int _tiledId)
         :
@@ -58,6 +78,10 @@ int Tile::getSheetH() const
 
 int Tile::getTiledGid() const
 {
+    if (-1 == tiledGid) {
+        throw std::runtime_error("Tiled GID of tile is not set");
+    }
+
     return tiledGid;
 }
 

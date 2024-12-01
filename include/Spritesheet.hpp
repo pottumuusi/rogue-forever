@@ -26,14 +26,16 @@ class Spritesheet {
 public:
     Spritesheet() = default;
     ~Spritesheet() = default;
+    Spritesheet(std::string _name);
     Spritesheet(std::string _name, Map& map);
 
-    std::string getName(void) const;
-    std::shared_ptr<SDL_Texture> getTexture(void);
-    nlohmann::json getJson(void);
-    int getTiledFirstgid(void) const;
+    std::string get_name(void) const;
+    std::shared_ptr<SDL_Texture> get_texture(void);
+    nlohmann::json get_json(void);
+    int get_tiled_firstgid(void) const;
 
     static const std::array<std::string, SPRITESHEET_POOL_SIZE> spritesheet_names;
+    static const std::string spritesheet_name_player;
 
 private:
     std::string name;
@@ -41,9 +43,9 @@ private:
     nlohmann::json json;
     int tiledFirstgid;
 
-    void loadTexture(std::string pathImage);
-    void loadJson(std::string pathJson);
-    void fetchFirstgid(Map& map);
+    void load_texture(std::string pathImage);
+    void load_json(std::string pathJson);
+    void fetch_firstgid(Map& map);
     void set_tiled_firstgid(int new_tiled_firstgid);
 };
 

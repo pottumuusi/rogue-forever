@@ -32,6 +32,14 @@ public:
             const int _sheetY,
             const int _sheetW,
             const int _sheetH,
+            const int _tiledId);
+    Tile(
+            std::string _name,
+            std::shared_ptr<SDL_Texture> _texture,
+            const int _sheetX,
+            const int _sheetY,
+            const int _sheetW,
+            const int _sheetH,
             const int _tiledGid,
             const int _tiledId);
 
