@@ -52,6 +52,13 @@ WINDOWS_EXE_NAME_GAME := rogue_forever.exe
 EXE_NAME_SERVER_ROUTE := rogue_forever_server_route
 EXE_NAME_SERVER_ROUTE_TEST_CLIENT := rogue_forever_server_route_test_client
 EXE_NAME_TEST := rogue_forever_test
+WINDOWS_DEPLOY_DST := /mnt/d/rogue_forever_deploy
+WINDOWS_DEPLOY_SRC := \
+			./assets \
+			./maps \
+			$(WINDOWS_EXE_NAME_GAME) \
+			./SDL2.dll \
+			./SDL2_image.dll
 
 ALL_EXE_NAMES := \
 		 $(EXE_NAME_GAME) \
@@ -63,6 +70,10 @@ ALL_WINDOWS_EXE_NAMES := \
 all: $(ALL_EXE_NAMES)
 
 windows: $(ALL_WINDOWS_EXE_NAMES)
+
+windows_deploy: windows
+	if [ ! -d "$(WINDOWS_DEPLOY_DST)" ] ; then mkdir $(WINDOWS_DEPLOY_DST) ; fi
+	cp -r $(WINDOWS_DEPLOY_SRC) $(WINDOWS_DEPLOY_DST)
 
 $(EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
 	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -o $@
