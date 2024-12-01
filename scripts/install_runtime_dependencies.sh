@@ -6,7 +6,6 @@ cd $(dirname $0)
 
 main() {
     local -r workarea_path='/tmp/rogue_forever_runtime_dependencies'
-    local -r scripts_path="$(pwd)"
     local -r rogue_forever_base_path="$(pushd .. &> /dev/null; pwd ; popd &> /dev/null)"
 
     mkdir ${workarea_path}
