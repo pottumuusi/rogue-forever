@@ -28,6 +28,9 @@ void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_p
     spritesheet_tile_width = -1;
     spritesheet_width = -1;
 
+#if DEBUG
+    Log::d("clearing tile_pool");
+#endif // DEBUG
     tile_pool.clear();
 
     for (Spritesheet& spritesheet : spritesheet_pool) {
