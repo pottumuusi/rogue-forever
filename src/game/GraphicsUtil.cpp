@@ -41,6 +41,9 @@ void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_p
             throw std::runtime_error("Top level tmj JSON value is not an object");
         }
 
+#if DEBUG
+        Log::d("getting tile height and width");
+#endif // DEBUG
         spritesheet_tile_height = tmj["tileheight"];
         spritesheet_tile_width = tmj["tilewidth"];
 
