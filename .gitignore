@@ -4,3 +4,8 @@ rogue_forever
 rogue_forever_test
 examples_do_not_distribute
 external/
+SDL2.dll
+SDL2_image.dll
+assets/
+maps/
+rogue_forever.exe
