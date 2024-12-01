@@ -198,12 +198,7 @@ void GraphicsUtil::load_spritesheets_map(spritesheet_pool& spritesheet_pool, Map
 
 void GraphicsUtil::load_spritesheet_player(Spritesheet& spritesheet_player)
 {
-    (void) spritesheet_player;
-
-    std::string spritesheet_name =
-        Spritesheet::spritesheet_names[Spritesheet::spritesheet_name_player];
-
-    spritesheet_player = Spritesheet(spritesheet_name);
+    spritesheet_player = Spritesheet(Spritesheet::spritesheet_name_player);
 }
 
 // Keeping as a reference for using std::filesystem

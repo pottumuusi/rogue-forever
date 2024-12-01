@@ -6,6 +6,8 @@
 #include "Sdlw.hpp"
 #include "Spritesheet.hpp"
 
+const std::string Spritesheet::spritesheet_name_player = "player-collection-spritesheet";
+
 const std::array<std::string, SPRITESHEET_POOL_SIZE> Spritesheet::spritesheet_names = {
     "dc-dngn-collection-spritesheet",
     "dc-misc-collection-spritesheet",
@@ -13,11 +15,9 @@ const std::array<std::string, SPRITESHEET_POOL_SIZE> Spritesheet::spritesheet_na
     "effect-collection-spritesheet",
     "gui-collection-spritesheet",
     "item-collection-spritesheet",
-    "player-collection-spritesheet",
+    Spritesheet::spritesheet_name_player,
     "spells-collection-spritesheet",
 };
-
-const int Spritesheet::spritesheet_name_player = 6;
 
 #if GRAPHICS_ENABLED
 Spritesheet::Spritesheet(std::string _name)
