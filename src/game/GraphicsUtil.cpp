@@ -12,6 +12,10 @@
  * other map components, such as trees and walls. Monsters are currently
  * not interactive and there is no mechanism to map behavior attributes
  * to any tiles.
+ *
+ * Use GID to index a tile. Tiles are created from all given spritesheets.
+ * GID numbers of different spritesheets do not overlap, so all tiles are
+ * inserted to a single map (data structure), `tile_pool`.
  */
 void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
 {

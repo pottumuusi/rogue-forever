@@ -157,6 +157,8 @@ void renderScreenTilesLayers(
 
 void render_player(Sdlw& sdlw, tile_pool& tile_pool_player)
 {
+    // 0 is used for empty .tmj layer data items. Render the first tile,
+    // whose id is 1.
     renderTile(
         sdlw,
         &(tile_pool_player[1]),
@@ -231,7 +233,7 @@ void game(void)
 
     SDL_Event event;
 
-    tile_pool tile_pool_main;
+    tile_pool tile_pool_map;
     tile_pool tile_pool_player;
     tile_id_map tileIdMap;
     texture_pool texturePool;
@@ -270,7 +272,7 @@ void game(void)
 
     Log::i("Generating tiles");
     try {
-        GraphicsUtil::generate_tiles_map(spritesheetPool, tile_pool_main);
+        GraphicsUtil::generate_tiles_map(spritesheetPool, tile_pool_map);
         GraphicsUtil::generate_tiles_player(spritesheet_player, tile_pool_player);
     } catch (std::exception const& e) {
         std::string msg = "Exception while generating tiles from spritesheets: ";
@@ -281,7 +283,7 @@ void game(void)
     }
 
 #if DEBUG_VERBOSE
-    printTilesFromTilePool(tile_pool_main);
+    printTilesFromTilePool(tile_pool_map);
 #endif
 
     Log::i("Entering main loop");
@@ -296,7 +298,7 @@ void game(void)
 
         sdlw.renderClear();
 
-        fillScreenTiles(tile_pool_main,
+        fillScreenTiles(tile_pool_map,
 			currentMap,
 			cameraX,
 			cameraY,

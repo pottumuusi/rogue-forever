@@ -79,7 +79,7 @@ int Tile::getSheetH() const
 int Tile::getTiledGid() const
 {
     if (-1 == tiledGid) {
-        throw std::runtime_error("Tile tiled GID is not set");
+        throw std::runtime_error("Tiled GID of tile is not set");
     }
 
     return tiledGid;
