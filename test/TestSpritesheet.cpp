@@ -21,7 +21,7 @@ TEST_F(TestSpritesheet, SpritesheetGetsFirstgid)
     spritesheet_pool spritesheet_pool;
     Map testMap = Map("test_data/map2_16x16_redone.tmj");
 
-    GraphicsUtil::load_spritesheets(spritesheet_pool, testMap);
+    GraphicsUtil::load_spritesheets_map(spritesheet_pool, testMap);
 
     Spritesheet& testSpritesheet = spritesheet_pool[0];
 
@@ -43,7 +43,7 @@ TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
 
     Map test_map = Map("test_data/map2_16x16_redone.tmj");
 
-    GraphicsUtil::load_spritesheets(spritesheet_pool, test_map);
+    GraphicsUtil::load_spritesheets_map(spritesheet_pool, test_map);
 
     Spritesheet& test_spritesheet = spritesheet_pool[0];
 
@@ -72,7 +72,7 @@ TEST_F(TestSpritesheet, MonSpritesheetDataIndex82Gives83)
 
     tmj = {};
 
-    GraphicsUtil::load_spritesheets(spritesheet_pool, test_map);
+    GraphicsUtil::load_spritesheets_map(spritesheet_pool, test_map);
 
     Spritesheet& test_spritesheet = spritesheet_pool[0];
 

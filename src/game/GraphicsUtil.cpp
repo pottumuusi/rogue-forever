@@ -151,7 +151,12 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
     }
 }
 
-void GraphicsUtil::load_spritesheets(spritesheet_pool& spritesheet_pool, Map& map)
+/*
+ * Load all spritesheets whose components are included in a map. When
+ * components of a spritesheet are used in a map, Tiled adds an entry
+ * to `tilesets` list of map tmj files.
+ */
+void GraphicsUtil::load_spritesheets_map(spritesheet_pool& spritesheet_pool, Map& map)
 {
     nlohmann::json tmj;
 

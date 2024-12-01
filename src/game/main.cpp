@@ -261,7 +261,7 @@ void game(void)
     }
 
     Log::i("Loading spritesheets");
-    GraphicsUtil::load_spritesheets(spritesheetPool, currentMap);
+    GraphicsUtil::load_spritesheets_map(spritesheetPool, currentMap);
     GraphicsUtil::load_spritesheet_player(spritesheet_player);
 
 #if DEBUG
