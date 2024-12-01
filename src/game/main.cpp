@@ -266,11 +266,11 @@ void game(void)
 
 #if DEBUG
     printConstructedSpritesheets(spritesheetPool);
-#endif
+#endif // DEBUG
 
     Log::i("Generating tiles");
     try {
-        GraphicsUtil::generate_tiles_main(spritesheetPool, tile_pool_main);
+        GraphicsUtil::generate_tiles_map(spritesheetPool, tile_pool_main);
         GraphicsUtil::generate_tiles_player(spritesheet_player, tile_pool_player);
     } catch (std::exception const& e) {
         std::string msg = "Exception while generating tiles from spritesheets: ";

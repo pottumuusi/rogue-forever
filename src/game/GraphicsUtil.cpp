@@ -6,7 +6,14 @@
 
 #include "Log.hpp"
 
-void GraphicsUtil::generate_tiles_main(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
+/*
+ * Generate tiles which are considered to be part of map. Currently this
+ * includes monsters as well. Monsters are added to a Tiled map, as any
+ * other map components, such as trees and walls. Monsters are currently
+ * not interactive and there is no mechanism to map behavior attributes
+ * to any tiles.
+ */
+void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
 {
     int spritesheet_tile_height;
     int spritesheet_tile_width;
