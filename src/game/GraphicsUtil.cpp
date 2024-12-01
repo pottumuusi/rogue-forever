@@ -112,9 +112,6 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
 
     std::shared_ptr<SDL_Texture> texture_spritesheet;
 
-    (void) spritesheet_player;
-    (void) tile_pool_player;
-
     spritesheet_tile_height = -1;
     spritesheet_tile_width = -1;
     spritesheet_width = -1;
