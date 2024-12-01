@@ -5,7 +5,7 @@ cd $(dirname $0)
 main() {
     pushd ..
 
-    if [ "rogue_forever" != "$(basename $(pwd))" ] ; then
+    if [ "rogue-forever" != "$(basename $(pwd))" ] ; then
         echo "Unexpected current directory. Please cd to scripts directory and run ./download_assets.sh"
         exit 0
     fi
