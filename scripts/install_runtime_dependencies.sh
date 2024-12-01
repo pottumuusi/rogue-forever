@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO rename the script to: install_runtime_dependencies.sh
-
 set -e
 
 cd $(dirname $0)
