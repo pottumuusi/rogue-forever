@@ -16,6 +16,11 @@ protected:
 
 TEST_F(TestJson, ParseJsonFromFile)
 {
+    EXPECT_EQ(1, 0);
+}
+
+TEST_F(TestJson, ParseJsonFromFileNlohmann)
+{
     nlohmann::json json;
 
     const std::string file_path = "test_data/map2_16x16_redone.tmj";
@@ -27,6 +32,11 @@ TEST_F(TestJson, ParseJsonFromFile)
 }
 
 TEST_F(TestJson, ReadMapTileHeight)
+{
+    EXPECT_EQ(1, 0);
+}
+
+TEST_F(TestJson, ReadMapTileHeightNlohmann)
 {
     nlohmann::json json;
     uint64_t tileheight;
