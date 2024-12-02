@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO consider using only absolute paths
+
 set -ex
 
 readonly INSTALL_SDL="TRUE"
@@ -7,21 +9,37 @@ readonly INSTALL_SDL_IMAGE="TRUE"
 readonly INSTALL_GTEST="TRUE"
 readonly INSTALL_CMAKE="TRUE"
 readonly INSTALL_CPP_COMPILER="TRUE"
-readonly INSTALL_CJSON="TRUE"
+readonly INSTALL_CJSON="FALSE"
+readonly INSTALL_NLOHMANNJSON="TRUE"
 readonly INSTALL_WGET="TRUE"
 readonly INSTALL_GIT="TRUE"
 readonly INSTALL_UNZIP="TRUE"
+readonly INSTALL_MINGW_64="TRUE"
+readonly INSTALL_SDL_MINGW_LIBRARY="TRUE"
+readonly INSTALL_SDL_IMAGE_MINGW_LIBRARY="TRUE"
 
 cd $(dirname $0)
 
 readonly ROGUE_FOREVER_BASE_PATH="$(pushd .. &> /dev/null; pwd ; popd &> /dev/null)"
 
 main() {
-    if [ ! -d deps_install_workarea ] ; then
+    if [ ! -d "deps_install_workarea" ] ; then
         mkdir deps_install_workarea
     fi
 
     # TODO create workarea directory under /tmp
+    if [ ! -d "deps_install_workarea/sdl_devel" ] ; then
+        mkdir deps_install_workarea/sdl_devel
+    fi
+
+    if [ ! -d "${ROGUE_FOREVER_BASE_PATH}/external" ] ; then
+        mkdir ${ROGUE_FOREVER_BASE_PATH}/external
+    fi
+
+    if [ ! -d "${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel" ] ; then
+        mkdir ${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel
+    fi
+
     pushd deps_install_workarea
 
     if [ "TRUE" == "${INSTALL_CMAKE}" ] ; then
@@ -49,6 +67,11 @@ main() {
         sudo apt install -y unzip
     fi
 
+    if [ "TRUE" == "${INSTALL_MINGW_64}" ] ; then
+        sudo apt update
+        sudo apt install -y mingw-w64
+    fi
+
     if [ "TRUE" == "$INSTALL_SDL" ] ; then
         sudo apt install -y libx11-dev libxext-dev
 
@@ -73,13 +96,15 @@ main() {
         popd
     fi
 
-    popd # deps_install_workarea
-
-    pushd ../
-    if [ ! -d external ] ; then
-        mkdir external
+    if [ "TRUE" == "${INSTALL_SDL_MINGW_LIBRARY}" ] ; then
+        install_sdl_mingw
     fi
-    popd # ../
+
+    if [ "TRUE" == "${INSTALL_SDL_IMAGE_MINGW_LIBRARY}" ] ; then
+        install_sdl_image_mingw
+    fi
+
+    popd # deps_install_workarea
 
     if [ "TRUE" == "${INSTALL_CJSON}" ] ; then
         install_cjson
@@ -99,6 +124,7 @@ error_exit() {
     exit 1
 }
 
+# TODO install by just copying the header and C file, instead of using cmake.
 install_cjson() {
     local -r install_using_cmake="FALSE"
     local -r install_by_copying="TRUE"
@@ -133,6 +159,50 @@ install_cjson() {
     rm --verbose -rf ${cjson_repo}
 
     popd # ${ROGUE_FOREVER_BASE_PATH}/external
+}
+
+install_sdl_mingw() {
+    local -r destination_path_lib="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/SDL2-2.30.6/x86_64-w64-mingw32/"
+    local -r destination_path_include="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/combined/"
+
+    pushd ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+
+    if [ ! -d "${destination_path_lib}" ] ; then
+        mkdir -p ${destination_path_lib}
+    fi
+
+    if [ ! -d "${destination_path_include}" ] ; then
+        mkdir -p ${destination_path_include}
+    fi
+
+    wget https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/SDL2-devel-2.30.6-mingw.zip
+    unzip SDL2-devel-2.30.6-mingw.zip
+    cp --verbose -r SDL2-2.30.6/x86_64-w64-mingw32/lib/ ${destination_path_lib}
+    cp --verbose -r SDL2-2.30.6/x86_64-w64-mingw32/include/ ${destination_path_include}
+
+    popd # ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+}
+
+install_sdl_image_mingw() {
+    local -r destination_path_lib="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/SDL2_image-2.8.2/x86_64-w64-mingw32/"
+    local -r destination_path_include="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/combined/"
+
+    pushd ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+
+    if [ ! -d "${destination_path_lib}" ] ; then
+        mkdir -p ${destination_path_lib}
+    fi
+
+    if [ ! -d "${destination_path_include}" ] ; then
+        mkdir -p ${destination_path_include}
+    fi
+
+    wget https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/SDL2_image-devel-2.8.2-mingw.zip
+    unzip SDL2_image-devel-2.8.2-mingw.zip
+    cp --verbose -r SDL2_image-2.8.2/x86_64-w64-mingw32/lib/ ${destination_path_lib}
+    cp --verbose -r SDL2_image-2.8.2/x86_64-w64-mingw32/include/ ${destination_path_include}
+
+    popd # ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
 }
 
 main

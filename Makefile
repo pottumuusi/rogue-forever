@@ -22,7 +22,7 @@ COMPILER_FLAGS_GAME := \
 		       $(COMMON_COMPILER_FLAGS) \
 		       -DGRAPHICS_ENABLED=1
 COMPILER_FLAGS_GAME_WINDOWS := \
-			   -I/mnt/d/mingw_dev/sdl_combined_headers/include \
+		       -Iexternal/sdl_devel/combined/include \
 		       $(COMMON_COMPILER_FLAGS) \
 		       -static-libgcc \
 		       -static-libstdc++ \
@@ -41,8 +41,8 @@ COMPILER_FLAGS_SERVER_ROUTE_TEST_CLIENT := $(COMPILER_FLAGS_SERVER_ROUTE)
 LINKER_FLAGS = -lSDL2 -lSDL2_image
 
 LINKER_FLAGS_WINDOWS := \
-			-L/mnt/d/mingw_dev/SDL2-2.30.6/x86_64-w64-mingw32/lib/ \
-			-L/mnt/d/mingw_dev/SDL2_image-2.8.2/x86_64-w64-mingw32/lib/ \
+			-Lexternal/sdl_devel/SDL2-2.30.6/x86_64-w64-mingw32/lib/ \
+			-Lexternal/sdl_devel/SDL2_image-2.8.2/x86_64-w64-mingw32/lib/ \
 			-Wl,-subsystem,windows \
 			-lmingw32 \
 			-lSDL2main \
