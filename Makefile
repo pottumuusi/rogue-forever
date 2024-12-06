@@ -76,6 +76,9 @@ linux: $(EXE_NAME_GAME)
 
 linux_debug: $(EXE_NAME_GAME_DEBUG)
 
+linux_run: $(EXE_NAME_GAME)
+	LD_LIBRARY_PATH=/usr/local/lib ./$(EXE_NAME_GAME)
+
 windows: $(ALL_WINDOWS_EXE_NAMES)
 
 all: linux windows
@@ -106,9 +109,6 @@ $(EXE_NAME_TEST): $(SRC_TEST)
 # unused then.
 targets:
 	@echo $(ALL_EXE_NAMES)
-
-linux_run: $(EXE_NAME_GAME)
-	LD_LIBRARY_PATH=/usr/local/lib ./$(EXE_NAME_GAME)
 
 test: $(EXE_NAME_TEST)
 	LD_LIBRARY_PATH=/usr/local/lib ./$(EXE_NAME_TEST)
