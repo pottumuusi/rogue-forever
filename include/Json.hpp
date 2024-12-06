@@ -1,14 +1,16 @@
 #ifndef JSON_HPP_DEFINED
 #define JSON_HPP_DEFINED
 
-#include <nlohmann/json.hpp>
+#include <nlohmann/json.hpp> // TODO remove dependency when cJSON is in use
+#include <cJSON.h>
 
 #include <string>
 
 class Json
 {
 public:
-    static nlohmann::json readFromFile(std::string filename);
+    static cJSON* readFromFile(std::string filename);
+    static nlohmann::json readFromFileNlohmann(std::string filename);
 
 private:
 };

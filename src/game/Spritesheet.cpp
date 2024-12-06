@@ -92,7 +92,7 @@ void Spritesheet::load_texture(std::string pathImage)
 
 void Spritesheet::load_json(std::string pathJson)
 {
-    json = Json::readFromFile(pathJson);
+    json = Json::readFromFileNlohmann(pathJson);
 }
 
 void Spritesheet::fetch_firstgid(Map& map)
