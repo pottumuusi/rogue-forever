@@ -16,7 +16,12 @@ protected:
 
 TEST_F(TestJson, ParseJsonFromFile)
 {
-    EXPECT_EQ(1, 0);
+    const std::string file_path = "test_data/map2_16x16_redone.tmj";
+    cJSON* json = NULL;
+
+    json = Json::readFromFile(file_path);
+
+    EXPECT_NE(json, nullptr);
 }
 
 TEST_F(TestJson, ParseJsonFromFileNlohmann)
@@ -26,7 +31,7 @@ TEST_F(TestJson, ParseJsonFromFileNlohmann)
     const std::string file_path = "test_data/map2_16x16_redone.tmj";
 
     json = nullptr;
-    json = Json::readFromFile(file_path);
+    json = Json::readFromFileNlohmann(file_path);
 
     EXPECT_NE(json, nullptr);
 }
@@ -46,7 +51,7 @@ TEST_F(TestJson, ReadMapTileHeightNlohmann)
     tileheight = 0;
     json = nullptr;
 
-    json = Json::readFromFile(file_path);
+    json = Json::readFromFileNlohmann(file_path);
     tileheight = json["tileheight"];
 
     EXPECT_EQ(32, tileheight);

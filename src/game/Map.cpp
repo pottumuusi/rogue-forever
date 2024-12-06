@@ -8,7 +8,7 @@ Map::Map(std::string path)
 
 void Map::loadJson(std::string path)
 {
-    mapTmj = Json::readFromFile(path);
+    mapTmj = Json::readFromFileNlohmann(path);
 }
 
 nlohmann::json Map::getTmj(void)
