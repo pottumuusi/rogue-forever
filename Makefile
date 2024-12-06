@@ -34,7 +34,11 @@ COMPILER_FLAGS_TEST := \
 COMPILER_FLAGS_SERVER_ROUTE := \
 			       $(COMMON_COMPILER_FLAGS)
 COMPILER_FLAGS_SERVER_ROUTE_TEST_CLIENT := $(COMPILER_FLAGS_SERVER_ROUTE)
+
+# Flag -static is not used, as Windows would not have at runtime the shared
+# libraries from the glibc version used for linking.
 LINKER_FLAGS = -lSDL2 -lSDL2_image
+
 LINKER_FLAGS_WINDOWS := \
 			-L/mnt/d/mingw_dev/SDL2-2.30.6/x86_64-w64-mingw32/lib/ \
 			-L/mnt/d/mingw_dev/SDL2_image-2.8.2/x86_64-w64-mingw32/lib/ \
@@ -48,6 +52,7 @@ LINKER_FLAGS_TEST := \
 		    -lgtest \
 		    -L/opt/gtest/lib
 EXE_NAME_GAME := rogue_forever
+EXE_NAME_GAME_DEBUG := rogue_forever_debug
 WINDOWS_EXE_NAME_GAME := rogue_forever.exe
 EXE_NAME_SERVER_ROUTE := rogue_forever_server_route
 EXE_NAME_SERVER_ROUTE_TEST_CLIENT := rogue_forever_server_route_test_client
@@ -67,9 +72,16 @@ ALL_EXE_NAMES := \
 ALL_WINDOWS_EXE_NAMES := \
 		 $(WINDOWS_EXE_NAME_GAME)
 
-all: $(ALL_EXE_NAMES)
+linux: $(EXE_NAME_GAME)
+
+linux_debug: $(EXE_NAME_GAME_DEBUG)
+
+linux_run: $(EXE_NAME_GAME)
+	LD_LIBRARY_PATH=/usr/local/lib ./$(EXE_NAME_GAME)
 
 windows: $(ALL_WINDOWS_EXE_NAMES)
+
+all: linux windows
 
 windows_deploy: windows
 	if [ ! -d "$(WINDOWS_DEPLOY_DST)" ] ; then mkdir $(WINDOWS_DEPLOY_DST) ; fi
@@ -77,6 +89,9 @@ windows_deploy: windows
 
 $(EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
 	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -o $@
+
+$(EXE_NAME_GAME_DEBUG): $(SRC_GAME) $(HEADERS_GAME_DIR)
+	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -g -o $@
 
 $(WINDOWS_EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
 	$(CC_MINGW) $(SRC_GAME) $(COMPILER_FLAGS_GAME_WINDOWS) $(LINKER_FLAGS_WINDOWS) -o $@
@@ -90,11 +105,10 @@ $(EXE_NAME_SERVER_ROUTE_TEST_CLIENT): $(SRC_SERVER_ROUTE_TEST_CLIENT)
 $(EXE_NAME_TEST): $(SRC_TEST)
 	$(CXX) $^ $(COMPILER_FLAGS_TEST) $(LINKER_FLAGS_TEST) -o $@
 
+# TODO fix and print all actually available targets. Note that ALL_EXE_NAMES becomes
+# unused then.
 targets:
 	@echo $(ALL_EXE_NAMES)
-
-run: $(EXE_NAME_GAME)
-	LD_LIBRARY_PATH=/usr/local/lib ./$(EXE_NAME_GAME)
 
 test: $(EXE_NAME_TEST)
 	LD_LIBRARY_PATH=/usr/local/lib ./$(EXE_NAME_TEST)
