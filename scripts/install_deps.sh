@@ -96,7 +96,7 @@ main() {
     fi
     popd # ./deps_install_workarea
 
-    sudo rm -rf ./deps_install_workarea
+    rm -rf ./deps_install_workarea
 }
 
 error_exit() {
