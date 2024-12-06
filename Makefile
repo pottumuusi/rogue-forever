@@ -52,6 +52,7 @@ LINKER_FLAGS_TEST := \
 		    -lgtest \
 		    -L/opt/gtest/lib
 EXE_NAME_GAME := rogue_forever
+EXE_NAME_GAME_DEBUG := rogue_forever_debug
 WINDOWS_EXE_NAME_GAME := rogue_forever.exe
 EXE_NAME_SERVER_ROUTE := rogue_forever_server_route
 EXE_NAME_SERVER_ROUTE_TEST_CLIENT := rogue_forever_server_route_test_client
@@ -73,6 +74,8 @@ ALL_WINDOWS_EXE_NAMES := \
 
 linux: $(EXE_NAME_GAME)
 
+linux_debug: $(EXE_NAME_GAME_DEBUG)
+
 windows: $(ALL_WINDOWS_EXE_NAMES)
 
 all: linux windows
@@ -83,6 +86,9 @@ windows_deploy: windows
 
 $(EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
 	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -o $@
+
+$(EXE_NAME_GAME_DEBUG): $(SRC_GAME) $(HEADERS_GAME_DIR)
+	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -g -o $@
 
 $(WINDOWS_EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
 	$(CC_MINGW) $(SRC_GAME) $(COMPILER_FLAGS_GAME_WINDOWS) $(LINKER_FLAGS_WINDOWS) -o $@
