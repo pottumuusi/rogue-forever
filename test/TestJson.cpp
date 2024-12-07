@@ -36,9 +36,40 @@ TEST_F(TestJson, ParseJsonFromFileNlohmann)
     EXPECT_NE(json, nullptr);
 }
 
+TEST_F(TestJson, ReadMapTileHeightIsNumber)
+{
+    const std::string file_path = "test_data/map2_16x16_redone.tmj";
+
+    cJSON* json;
+    cJSON* json_tile_height;
+
+    json = NULL;
+    json_tile_height = NULL;
+
+    json = Json::readFromFile(file_path);
+    json_tile_height = cJSON_GetObjectItemCaseSensitive(json, "tileheight");
+
+    EXPECT_EQ(1, cJSON_IsNumber(json_tile_height));
+}
+
 TEST_F(TestJson, ReadMapTileHeight)
 {
-    EXPECT_EQ(1, 0);
+    const std::string file_path = "test_data/map2_16x16_redone.tmj";
+    const uint64_t tile_height_expected = 32;
+
+    cJSON* json;
+    cJSON* json_tile_height;
+    uint64_t tile_height;
+
+    json = NULL;
+    json_tile_height = NULL;
+    tile_height = -1;
+
+    json = Json::readFromFile(file_path);
+    json_tile_height = cJSON_GetObjectItemCaseSensitive(json, "tileheight");
+    tile_height = json_tile_height->valueint;
+
+    EXPECT_EQ(tile_height_expected, tile_height);
 }
 
 TEST_F(TestJson, ReadMapTileHeightNlohmann)

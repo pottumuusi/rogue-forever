@@ -33,7 +33,9 @@ cJSON* Json::readFromFile(std::string file_path)
     }
 
     json_string = (char*) calloc(file_stat.st_size, bytes);
+#if DEBUG_VERBOSE
     printf("%s size is: %ld\n", file_path.c_str(), file_stat.st_size);
+#endif
 
     file = fopen(file_path.c_str(), "r");
     if (0 == file) {
