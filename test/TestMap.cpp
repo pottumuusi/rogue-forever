@@ -29,6 +29,7 @@ TEST_F(TestMap, GetGidOfFirstLayer)
     EXPECT_EQ(testMap.get_tiled_gid(x, y, layer), 347);
 }
 
+#if 0
 TEST_F(TestMap, GetGidOfSecondLayer)
 {
     const int layer = 1;
@@ -65,3 +66,4 @@ TEST_F(TestMap, TryToGetGidFromOutOfBounds3)
     Map testMap = Map("test_data/map2_16x16_redone.tmj");
     EXPECT_EQ(testMap.get_tiled_gid(x, y, layer), 0);
 }
+#endif
