@@ -16,11 +16,6 @@ cJSON* Map::getTmj(void)
     return mapTmj;
 }
 
-nlohmann::json Map::getTmjNlohmann(void)
-{
-    return mapTmjNlohmann;
-}
-
 // TODO make private
 cJSON* Map::get_layers_array(void)
 {
@@ -38,11 +33,6 @@ cJSON* Map::get_layers_array(void)
     return json_layers;
 }
 
-std::vector<nlohmann::json> Map::getLayersNlohmann(void)
-{
-    return mapTmjNlohmann["layers"];
-}
-
 int Map::getLayerAmount(void)
 {
     cJSON* json_layers;
@@ -52,11 +42,6 @@ int Map::getLayerAmount(void)
     json_layers = get_layers_array();
 
     return cJSON_GetArraySize(json_layers);
-}
-
-int Map::getLayerAmountNlohmann(void)
-{
-    return getLayersNlohmann().size();
 }
 
 std::uint32_t Map::get_tiled_gid(const int x, const int y, const int layer_num)
@@ -116,43 +101,6 @@ std::uint32_t Map::get_tiled_gid(const int x, const int y, const int layer_num)
 
     json = cJSON_GetArrayItem(json_layer_data_array, (layer_width * y) + x);
     tiled_gid = json->valueint;
-
-    return tiled_gid;
-}
-
-std::uint32_t Map::get_tiled_gid_nlohmann(const int x, const int y, const int layer_num)
-{
-    std::uint32_t tiled_gid;
-    int layer_width;
-    int layer_height;
-    bool out_of_bounds;
-
-    tiled_gid = 0;
-    layer_width = 0;
-    layer_height = 0;
-    out_of_bounds = true;
-
-    out_of_bounds = layer_num < 0 || layer_num >= getLayerAmountNlohmann();
-    if (out_of_bounds) {
-        Log::w("Layer number out of bounds while getting tiled gid");
-        return 0;
-    }
-
-    std::vector<nlohmann::json> layers_array = getLayersNlohmann();
-    nlohmann::json layer = layers_array[layer_num];
-    std::vector<uint64_t> layer_data_array = layer["data"];
-
-    layer_width = layer["width"];
-    layer_height = layer["height"];
-
-    out_of_bounds =
-        x < 0 || x > (layer_width - 1) ||
-        y < 0 || y > (layer_height - 1);
-    if (out_of_bounds) {
-        return 0;
-    }
-
-    tiled_gid = layer_data_array[(layer_width * y) + x];
 
     return tiled_gid;
 }

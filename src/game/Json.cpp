@@ -93,11 +93,3 @@ cJSON* Json::readFromFile(std::string file_path)
 
     return json;
 }
-
-nlohmann::json Json::readFromFileNlohmann(std::string file_path)
-{
-    std::ifstream f(file_path.c_str());
-    nlohmann::json data = nlohmann::json::parse(f);
-
-    return data;
-}

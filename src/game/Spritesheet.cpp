@@ -71,11 +71,6 @@ cJSON* Spritesheet::get_json(void)
     return json;
 }
 
-nlohmann::json Spritesheet::get_json_nlohmann(void)
-{
-    return json_nlohmann;
-}
-
 int Spritesheet::get_tiled_firstgid(void) const
 {
     if (-1 == tiledFirstgid) {
@@ -103,11 +98,6 @@ void Spritesheet::load_texture(std::string pathImage)
 void Spritesheet::load_json(std::string pathJson)
 {
     json = Json::readFromFile(pathJson);
-}
-
-void Spritesheet::load_json_nlohmann(std::string pathJson)
-{
-    json_nlohmann = Json::readFromFileNlohmann(pathJson);
 }
 
 void Spritesheet::fetch_firstgid(Map& map)
@@ -170,47 +160,4 @@ void Spritesheet::fetch_firstgid(Map& map)
 
     throw std::runtime_error(
         "Could not find firstgid for spritesheet: " + name);
-}
-
-void Spritesheet::fetch_firstgid_nlohmann(Map& map)
-{
-    int tilesets_array_size;
-
-    std::string tileset_source_str;
-
-    nlohmann::json tmj;
-    nlohmann::json tileset;
-
-    const std::string spritesheet_name = get_name();
-
-    tilesets_array_size = -1;
-    tileset_source_str = "N/A";
-
-    tmj = map.getTmjNlohmann();
-
-    if ( ! tmj.is_object()) {
-        std::string msg = "While fetching firstgid, top level map .tmj ";
-        msg += "JSON value is not an object";
-        throw std::runtime_error(msg);
-    }
-
-    auto tilesets_array = tmj["tilesets"];
-    tilesets_array_size = tmj["tilesets"].size();
-
-    for (int i = 0; i < tilesets_array_size; ++i) {
-        tileset = tilesets_array[i];
-        tileset_source_str = tileset["source"];
-
-        if (0 != tileset_source_str.compare(spritesheet_name + ".tsx")) {
-            continue;
-        }
-
-        auto tileset_firstgid = tileset["firstgid"];
-
-        set_tiled_firstgid(tileset_firstgid);
-
-        return;
-    }
-
-    throw std::runtime_error("Could not find firstgid for spritesheet: " + name);
 }

@@ -1,6 +1,8 @@
 #include "Sdlw.hpp"
 #include "Tile.hpp"
 
+#include <stdexcept>
+
 Tile::~Tile()
 {
 }
