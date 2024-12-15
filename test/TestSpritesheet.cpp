@@ -65,18 +65,23 @@ TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
     EXPECT_EQ(cJSON_GetArraySize(json_layers_array), 1);
 }
 
-// TODO Fix spritesheet tests
-#if 0
 TEST_F(TestSpritesheet, MonSpritesheetDataIndex82Gives83)
 {
-    nlohmann::json tmj;
-    nlohmann::json layer;
+    cJSON* json_tmj;
+    cJSON* json_layer;
+    cJSON* json_layers_array;
+    cJSON* json_data_array;
+    cJSON* json_data_item;
 
     spritesheet_pool spritesheet_pool;
 
     Map test_map = Map("test_data/map2_16x16_redone.tmj");
 
-    tmj = {};
+    json_tmj = NULL;
+    json_layer = NULL;
+    json_layers_array = NULL;
+    json_data_array = NULL;
+    json_data_item = NULL;
 
     GraphicsUtil::load_spritesheets_map(spritesheet_pool, test_map);
 
@@ -89,12 +94,11 @@ TEST_F(TestSpritesheet, MonSpritesheetDataIndex82Gives83)
         }
     }
 
-    tmj = test_spritesheet.get_json();
-    auto layers_array = tmj["layers"];
-    layer = layers_array[0];
-    auto data_array = layer["data"];
-    auto data_item = data_array[82];
+    json_tmj = test_spritesheet.get_json();
+    json_layers_array = cJSON_GetObjectItemCaseSensitive(json_tmj, "layers");
+    json_layer = cJSON_GetArrayItem(json_layers_array, 0);
+    json_data_array = cJSON_GetObjectItemCaseSensitive(json_layer, "data");
+    json_data_item = cJSON_GetArrayItem(json_data_array, 82);
 
-    EXPECT_EQ(data_item, 83);
+    EXPECT_EQ(json_data_item->valueint, 83);
 }
-#endif
