@@ -35,15 +35,17 @@ TEST_F(TestSpritesheet, SpritesheetGetsFirstgid)
     EXPECT_EQ(testSpritesheet.get_tiled_firstgid(), 560);
 }
 
-// TODO Fix spritesheet tests
-#if 0
 TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
 {
-    nlohmann::json tmj;
+    cJSON* json_tmj;
+    cJSON* json_layers_array;
 
     spritesheet_pool spritesheet_pool;
 
     Map test_map = Map("test_data/map2_16x16_redone.tmj");
+
+    json_tmj = NULL;
+    json_layers_array = NULL;
 
     GraphicsUtil::load_spritesheets_map(spritesheet_pool, test_map);
 
@@ -56,13 +58,15 @@ TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
         }
     }
 
-    tmj = test_spritesheet.get_json();
+    json_tmj = test_spritesheet.get_json();
 
-    auto layers_array = tmj["layers"];
+    json_layers_array = cJSON_GetObjectItemCaseSensitive(json_tmj, "layers");
 
-    EXPECT_EQ(layers_array.size(), 1);
+    EXPECT_EQ(cJSON_GetArraySize(json_layers_array), 1);
 }
 
+// TODO Fix spritesheet tests
+#if 0
 TEST_F(TestSpritesheet, MonSpritesheetDataIndex82Gives83)
 {
     nlohmann::json tmj;

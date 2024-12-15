@@ -16,8 +16,61 @@
  * Use GID to index a tile. Tiles are created from all given spritesheets.
  * GID numbers of different spritesheets do not overlap, so all tiles are
  * inserted to a single map (data structure), `tile_pool`.
+ *
+ * TODO check if this function is tested and test if feasible.
+ * https://github.com/pottumuusi/rogue-forever/issues/24
  */
 void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
+{
+    int spritesheet_tile_height;
+    int spritesheet_tile_width;
+    int spritesheet_width;
+
+    cJSON* json;
+    cJSON* json_tmj;
+
+    std::shared_ptr<SDL_Texture> texture_spritesheet;
+
+    spritesheet_tile_height = -1;
+    spritesheet_tile_width = -1;
+    spritesheet_width = -1;
+
+#if DEBUG
+    Log::d("clearing tile_pool");
+#endif // DEBUG
+    tile_pool.clear();
+
+    (void) spritesheet_pool;
+    (void) tile_pool;
+
+    (void) spritesheet_tile_height;
+    (void) spritesheet_tile_width;
+    (void) spritesheet_width;
+
+    (void) json;
+    (void) json_tmj;
+
+    (void) texture_spritesheet;
+
+    (void) spritesheet_tile_height;
+    (void) spritesheet_tile_width;
+    (void) spritesheet_width;
+
+    printf("GraphicsUtil::generate_tiles_map not yet implemented\n");
+}
+
+/*
+ * Generate tiles which are considered to be part of map. Currently this
+ * includes monsters as well. Monsters are added to a Tiled map, as any
+ * other map components, such as trees and walls. Monsters are currently
+ * not interactive and there is no mechanism to map behavior attributes
+ * to any tiles.
+ *
+ * Use GID to index a tile. Tiles are created from all given spritesheets.
+ * GID numbers of different spritesheets do not overlap, so all tiles are
+ * inserted to a single map (data structure), `tile_pool`.
+ */
+void GraphicsUtil::generate_tiles_map_nlohmann(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
 {
     int spritesheet_tile_height;
     int spritesheet_tile_width;
@@ -38,7 +91,7 @@ void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_p
     tile_pool.clear();
 
     for (Spritesheet& spritesheet : spritesheet_pool) {
-        tmj = spritesheet.get_json();
+        tmj = spritesheet.get_json_nlohmann();
         texture_spritesheet = spritesheet.get_texture();
 
         if ( ! tmj.is_object()) {
@@ -107,6 +160,14 @@ void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_p
 
 void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_pool& tile_pool_player)
 {
+    (void) spritesheet_player;
+    (void) tile_pool_player;
+
+    printf("GraphicsUtil::generate_tiles_player is not yet implemented\n");
+}
+
+void GraphicsUtil::generate_tiles_player_nlohmann(Spritesheet& spritesheet_player, tile_pool& tile_pool_player)
+{
     int spritesheet_tile_height;
     int spritesheet_tile_width;
     int spritesheet_width;
@@ -120,7 +181,7 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
     spritesheet_tile_width = -1;
     spritesheet_width = -1;
 
-    tmj = spritesheet_player.get_json();
+    tmj = spritesheet_player.get_json_nlohmann();
     texture_spritesheet = spritesheet_player.get_texture();
 
     if ( ! tmj.is_object()) {

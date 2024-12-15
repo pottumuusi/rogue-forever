@@ -61,9 +61,14 @@ std::shared_ptr<SDL_Texture> Spritesheet::get_texture(void)
     return texture;
 }
 
-nlohmann::json Spritesheet::get_json(void)
+cJSON* Spritesheet::get_json(void)
 {
     return json;
+}
+
+nlohmann::json Spritesheet::get_json_nlohmann(void)
+{
+    return json_nlohmann;
 }
 
 int Spritesheet::get_tiled_firstgid(void) const
@@ -92,7 +97,12 @@ void Spritesheet::load_texture(std::string pathImage)
 
 void Spritesheet::load_json(std::string pathJson)
 {
-    json = Json::readFromFileNlohmann(pathJson);
+    json = Json::readFromFile(pathJson);
+}
+
+void Spritesheet::load_json_nlohmann(std::string pathJson)
+{
+    json_nlohmann = Json::readFromFileNlohmann(pathJson);
 }
 
 void Spritesheet::fetch_firstgid(Map& map)
