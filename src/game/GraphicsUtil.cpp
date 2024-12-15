@@ -177,7 +177,7 @@ void GraphicsUtil::load_spritesheets_map(spritesheet_pool& spritesheet_pool, Map
     std::string tileset_source;
     std::vector<std::string> tileset_names;
 
-    tmj = map.getTmj();
+    tmj = map.getTmjNlohmann();
     if ( ! tmj.is_object()) {
         throw std::runtime_error("Top level map .tmj JSON value is not an object");
     }

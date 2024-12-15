@@ -109,7 +109,7 @@ void Spritesheet::fetch_firstgid(Map& map)
     tilesets_array_size = -1;
     tileset_source_str = "N/A";
 
-    tmj = map.getTmj();
+    tmj = map.getTmjNlohmann();
 
     if ( ! tmj.is_object()) {
         std::string msg = "While fetching firstgid, top level map .tmj ";
