@@ -63,6 +63,11 @@ std::shared_ptr<SDL_Texture> Spritesheet::get_texture(void)
 
 cJSON* Spritesheet::get_json(void)
 {
+    if ( ! cJSON_IsObject(json)) {
+        throw std::runtime_error(
+            "Top level spritesheet JSON value is not an object");
+    }
+
     return json;
 }
 
