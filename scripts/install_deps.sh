@@ -155,6 +155,4 @@ install_nlohmannjson() {
     popd # ../external
 }
 
-cd $(dirname $0)
-
 main
