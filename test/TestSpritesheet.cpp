@@ -16,8 +16,6 @@ protected:
     }
 };
 
-// TODO Fix spritesheet tests
-#if 0
 TEST_F(TestSpritesheet, SpritesheetGetsFirstgid)
 {
     spritesheet_pool spritesheet_pool;
@@ -37,6 +35,8 @@ TEST_F(TestSpritesheet, SpritesheetGetsFirstgid)
     EXPECT_EQ(testSpritesheet.get_tiled_firstgid(), 560);
 }
 
+// TODO Fix spritesheet tests
+#if 0
 TEST_F(TestSpritesheet, MonSpritesheetContainsOneLayer)
 {
     nlohmann::json tmj;

@@ -10,6 +10,7 @@ public:
     static void generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool);
     static void generate_tiles_player(Spritesheet& spritesheet_player, tile_pool& tile_pool_player);
     static void load_spritesheets_map(spritesheet_pool& spritesheetPool, Map& map);
+    static void load_spritesheets_map_nlohmann(spritesheet_pool& spritesheet_pool, Map& map);
     static void load_spritesheet_player(Spritesheet& spritesheet_player);
     static void generateTileIdMapFile(tile_id_map& tileIdMap);
 

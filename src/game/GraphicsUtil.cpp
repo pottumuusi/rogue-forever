@@ -170,7 +170,71 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
  * components of a spritesheet are used in a map, Tiled adds an entry
  * to `tilesets` list of map tmj files.
  */
-void GraphicsUtil::load_spritesheets_map(spritesheet_pool& spritesheet_pool, Map& map)
+void GraphicsUtil::load_spritesheets_map(
+    spritesheet_pool& spritesheet_pool,
+    Map& map)
+{
+    cJSON* json;
+    cJSON* json_tmj;
+    cJSON* json_tileset;
+    cJSON* json_tilesets_array;
+
+    std::string tileset_source;
+    std::vector<std::string> tileset_names;
+
+    unsigned int json_tilesets_size;
+
+    json = NULL;
+    json_tmj = NULL;
+    json_tileset = NULL;
+    json_tilesets_array = NULL;
+    json_tilesets_size = 0;
+
+    json_tmj = map.getTmj();
+    if ( ! cJSON_IsObject(json_tmj)) {
+        throw std::runtime_error(
+            "Top level map .tmj JSON value is not an object");
+    }
+
+    json_tilesets_array = cJSON_GetObjectItemCaseSensitive(json_tmj, "tilesets");
+    if ( ! cJSON_IsArray(json_tilesets_array)) {
+        throw std::runtime_error("'tilesets' of tmj is not an array");
+    }
+
+    json_tilesets_size = cJSON_GetArraySize(json_tilesets_array);
+    for (unsigned int i = 0; i < json_tilesets_size; i++) {
+        json_tileset = cJSON_GetArrayItem(json_tilesets_array, i);
+        if ( ! cJSON_IsObject(json_tileset)) {
+            throw std::runtime_error("tileset is not an object");
+        }
+
+        json = cJSON_GetObjectItemCaseSensitive(json_tileset, "source");
+        if ( ! cJSON_IsString(json)) {
+            throw std::runtime_error("Tileset source is not a string");
+        }
+
+        tileset_source = json->valuestring;
+        tileset_names.push_back(tileset_source);
+    }
+
+    for (std::string spritesheet_name : Spritesheet::spritesheet_names) {
+        for (std::string tileset_name : tileset_names) {
+            if (0 == tileset_name.compare(spritesheet_name + ".tsx")) {
+                spritesheet_pool.push_back(Spritesheet(spritesheet_name, map));
+                break;
+            }
+        }
+    }
+}
+
+/*
+ * Load all spritesheets whose components are included in a map. When
+ * components of a spritesheet are used in a map, Tiled adds an entry
+ * to `tilesets` list of map tmj files.
+ */
+void GraphicsUtil::load_spritesheets_map_nlohmann(
+    spritesheet_pool& spritesheet_pool,
+    Map& map)
 {
     nlohmann::json tmj;
 
@@ -179,7 +243,8 @@ void GraphicsUtil::load_spritesheets_map(spritesheet_pool& spritesheet_pool, Map
 
     tmj = map.getTmjNlohmann();
     if ( ! tmj.is_object()) {
-        throw std::runtime_error("Top level map .tmj JSON value is not an object");
+        throw std::runtime_error(
+            "Top level map .tmj JSON value is not an object");
     }
 
     auto tilesets = tmj["tilesets"];

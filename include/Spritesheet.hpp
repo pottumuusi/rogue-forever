@@ -40,12 +40,13 @@ public:
 private:
     std::string name;
     std::shared_ptr<SDL_Texture> texture;
-    nlohmann::json json;
+    nlohmann::json json; // TODO rename 'json_spritesheet'
     int tiledFirstgid;
 
     void load_texture(std::string pathImage);
     void load_json(std::string pathJson);
     void fetch_firstgid(Map& map);
+    void fetch_firstgid_nlohmann(Map& map);
     void set_tiled_firstgid(int new_tiled_firstgid);
 };
 
