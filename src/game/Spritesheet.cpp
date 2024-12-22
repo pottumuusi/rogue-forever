@@ -61,9 +61,14 @@ std::shared_ptr<SDL_Texture> Spritesheet::get_texture(void)
     return texture;
 }
 
-nlohmann::json Spritesheet::get_json(void)
+cJSON* Spritesheet::get_json(void)
 {
-    return json;
+    if ( ! cJSON_IsObject(json_spritesheet)) {
+        throw std::runtime_error(
+            "Top level spritesheet JSON value is not an object");
+    }
+
+    return json_spritesheet;
 }
 
 int Spritesheet::get_tiled_firstgid(void) const
@@ -92,48 +97,67 @@ void Spritesheet::load_texture(std::string pathImage)
 
 void Spritesheet::load_json(std::string pathJson)
 {
-    json = Json::readFromFile(pathJson);
+    json_spritesheet = Json::readFromFile(pathJson);
 }
 
 void Spritesheet::fetch_firstgid(Map& map)
 {
-    int tilesets_array_size;
+    unsigned int tilesets_array_size;
+    int tileset_firstgid;
 
+    cJSON* json;
+    cJSON* json_tmj;
+    cJSON* json_tileset;
+    cJSON* json_tilesets_array;
+
+    std::string spritesheet_name;
     std::string tileset_source_str;
 
-    nlohmann::json tmj;
-    nlohmann::json tileset;
-
-    const std::string spritesheet_name = get_name();
-
-    tilesets_array_size = -1;
+    json = NULL;
+    json_tmj = NULL;
+    json_tileset = NULL;
+    json_tilesets_array = NULL;
+    tilesets_array_size = 0;
     tileset_source_str = "N/A";
+    spritesheet_name = "N/A";
 
-    tmj = map.getTmj();
+    spritesheet_name = get_name();
 
-    if ( ! tmj.is_object()) {
-        std::string msg = "While fetching firstgid, top level map .tmj ";
-        msg += "JSON value is not an object";
-        throw std::runtime_error(msg);
+    json_tmj = map.getTmj();
+    if ( ! cJSON_IsObject(json_tmj)) {
+        throw std::runtime_error(
+            "While fetching firstgid, top level map .tmj JSON value is not an object");
     }
 
-    auto tilesets_array = tmj["tilesets"];
-    tilesets_array_size = tmj["tilesets"].size();
+    json_tilesets_array = cJSON_GetObjectItemCaseSensitive(
+        json_tmj, "tilesets");
+    if ( ! cJSON_IsArray(json_tilesets_array)) {
+        throw std::runtime_error("'tilesets' of tmj is not an array");
+    }
 
-    for (int i = 0; i < tilesets_array_size; ++i) {
-        tileset = tilesets_array[i];
-        tileset_source_str = tileset["source"];
+    tilesets_array_size = cJSON_GetArraySize(json_tilesets_array);
+
+    for (unsigned int i = 0; i < tilesets_array_size; i++) {
+        json_tileset = cJSON_GetArrayItem(json_tilesets_array, i);
+        if ( ! cJSON_IsObject(json_tileset)) {
+            throw std::runtime_error("tilesets array element is not an object");
+        }
+
+        json = cJSON_GetObjectItemCaseSensitive(json_tileset, "source");
+        tileset_source_str = json->valuestring;
 
         if (0 != tileset_source_str.compare(spritesheet_name + ".tsx")) {
             continue;
         }
 
-        auto tileset_firstgid = tileset["firstgid"];
+        json = cJSON_GetObjectItemCaseSensitive(json_tileset, "firstgid");
+        tileset_firstgid = json->valueint;
 
         set_tiled_firstgid(tileset_firstgid);
 
         return;
     }
 
-    throw std::runtime_error("Could not find firstgid for spritesheet: " + name);
+    throw std::runtime_error(
+        "Could not find firstgid for spritesheet: " + name);
 }

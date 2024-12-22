@@ -3,7 +3,8 @@ HEADERS_GAME_DIR := include
 SRC_TEST_DIR := test
 
 SRC_GAME := \
-	    $(shell find $(SRC_GAME_DIR)/ -name "*.cpp")
+	    $(shell find $(SRC_GAME_DIR)/ -name "*.cpp") \
+	    external/cJSON/src/cJSON.c
 HEADERS_GAME := $(shell find $(HEADERS_GAME_DIR)/ -name "*.hpp")
 SRC_TEST := \
 	    $(filter-out $(SRC_GAME_DIR)/main.cpp, $(SRC_GAME)) \
@@ -14,7 +15,7 @@ SRC_SERVER_ROUTE_TEST_CLIENT := src/server_route/test_client.cpp
 
 CC := g++
 CC_MINGW := x86_64-w64-mingw32-g++
-INCLUDES := -Iinclude -Iexternal
+INCLUDES := -Iinclude -Iexternal -Iexternal/cJSON/include/
 INCLUDES_TEST := -I/opt/gtest/include/
 COMMON_COMPILER_FLAGS := $(INCLUDES) -Wall -Wextra -Wpedantic -std=c++17
 COMPILER_FLAGS_GAME := \
@@ -87,13 +88,13 @@ windows_deploy: windows
 	if [ ! -d "$(WINDOWS_DEPLOY_DST)" ] ; then mkdir $(WINDOWS_DEPLOY_DST) ; fi
 	cp -r $(WINDOWS_DEPLOY_SRC) $(WINDOWS_DEPLOY_DST)
 
-$(EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
+$(EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME)
 	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -o $@
 
-$(EXE_NAME_GAME_DEBUG): $(SRC_GAME) $(HEADERS_GAME_DIR)
+$(EXE_NAME_GAME_DEBUG): $(SRC_GAME) $(HEADERS_GAME)
 	$(CXX) $(SRC_GAME) $(COMPILER_FLAGS_GAME) $(LINKER_FLAGS) -g -o $@
 
-$(WINDOWS_EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME_DIR)
+$(WINDOWS_EXE_NAME_GAME): $(SRC_GAME) $(HEADERS_GAME)
 	$(CC_MINGW) $(SRC_GAME) $(COMPILER_FLAGS_GAME_WINDOWS) $(LINKER_FLAGS_WINDOWS) -o $@
 
 $(EXE_NAME_SERVER_ROUTE): $(SRC_SERVER_ROUTE)

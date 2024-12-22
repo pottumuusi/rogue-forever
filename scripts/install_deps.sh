@@ -7,17 +7,21 @@ readonly INSTALL_SDL_IMAGE="TRUE"
 readonly INSTALL_GTEST="TRUE"
 readonly INSTALL_CMAKE="TRUE"
 readonly INSTALL_CPP_COMPILER="TRUE"
-readonly INSTALL_CJSON="FALSE"
-readonly INSTALL_NLOHMANNJSON="TRUE"
+readonly INSTALL_CJSON="TRUE"
 readonly INSTALL_WGET="TRUE"
 readonly INSTALL_GIT="TRUE"
 readonly INSTALL_UNZIP="TRUE"
+
+cd $(dirname $0)
+
+readonly ROGUE_FOREVER_BASE_PATH="$(pushd .. &> /dev/null; pwd ; popd &> /dev/null)"
 
 main() {
     if [ ! -d deps_install_workarea ] ; then
         mkdir deps_install_workarea
     fi
 
+    # TODO create workarea directory under /tmp
     pushd deps_install_workarea
 
     if [ "TRUE" == "${INSTALL_CMAKE}" ] ; then
@@ -81,51 +85,54 @@ main() {
         install_cjson
     fi
 
-    if [ "TRUE" == "${INSTALL_NLOHMANNJSON}" ] ; then
-        install_nlohmannjson
-    fi
-
     pushd ./deps_install_workarea
     if [ "TRUE" == "${INSTALL_GTEST}" ] ; then
         ../install_gtest.sh
     fi
     popd # ./deps_install_workarea
 
-    sudo rm -rf ./deps_install_workarea
+    rm -rf ./deps_install_workarea
+}
+
+error_exit() {
+    echo "${1}"
+    exit 1
 }
 
 install_cjson() {
-    pushd ../external
+    local -r install_using_cmake="FALSE"
+    local -r install_by_copying="TRUE"
+    local -r cjson_repo="cJSON_cloned"
 
-    git clone https://github.com/DaveGamble/cJSON.git
-    pushd cJSON
+    pushd ${ROGUE_FOREVER_BASE_PATH}/external
 
-    mkdir build
-    cd build
-    cmake .. -DBUILD_SHARED_AND_STATIC_LIBS=On
-    make
-    sudo make install
-
-    popd # cJSON
-
-    popd # ../external
-}
-
-install_nlohmannjson() {
-    pushd ../external
-
-    if [ ! -d nlohmann ] ; then
-        mkdir nlohmann
+    if [ ! -d "cJSON" ] ; then
+        mkdir -p cJSON/src
+        mkdir -p cJSON/include
     fi
 
-    pushd nlohmann
+    git clone https://github.com/DaveGamble/cJSON.git ${cjson_repo}
 
-    wget https://raw.githubusercontent.com/nlohmann/json/v3.11.3/single_include/nlohmann/json.hpp
+    if [ "TRUE" == "${install_using_cmake}" ] ; then
+        # This execution path is untested
+        pushd ${cjson_repo}
+        mkdir build
+        cd build
+        cmake .. -DBUILD_SHARED_AND_STATIC_LIBS=On
+        make
+        sudo make install
+        popd # ${cjson_repo}
+    elif [ "TRUE" == "${install_by_copying}" ] ; then
+        cp --verbose ${cjson_repo}/cJSON.c ./cJSON/src/
+        cp --verbose ${cjson_repo}/cJSON.h ./cJSON/include/
+    else
+        rm --verbose -rf ${cjson_repo}
+        error_exit "No valid installation method for cJSON selected"
+    fi
 
-    popd # nlohmann
-    popd # ../external
+    rm --verbose -rf ${cjson_repo}
+
+    popd # ${ROGUE_FOREVER_BASE_PATH}/external
 }
-
-cd $(dirname $0)
 
 main

@@ -16,15 +16,26 @@
  * Use GID to index a tile. Tiles are created from all given spritesheets.
  * GID numbers of different spritesheets do not overlap, so all tiles are
  * inserted to a single map (data structure), `tile_pool`.
+ *
+ * TODO check if this function is tested and test if feasible:
+ * https://github.com/pottumuusi/rogue-forever/issues/24
  */
-void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_pool& tile_pool)
+void GraphicsUtil::generate_tiles_map(
+    spritesheet_pool& spritesheet_pool,
+    tile_pool& tile_pool)
 {
     int spritesheet_tile_height;
     int spritesheet_tile_width;
     int spritesheet_width;
 
-    nlohmann::json tmj;
-    nlohmann::json item;
+    unsigned int tiled_id;
+    unsigned int tiled_gid;
+
+    cJSON* json;
+    cJSON* json_tmj;
+    cJSON* json_data_item;
+    cJSON* json_data_array;
+    cJSON* json_layers_array;
 
     std::shared_ptr<SDL_Texture> texture_spritesheet;
 
@@ -32,42 +43,59 @@ void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_p
     spritesheet_tile_width = -1;
     spritesheet_width = -1;
 
+    tiled_id = 0;
+    tiled_gid = 0;
+
+    json = NULL;
+    json_tmj = NULL;
+    json_data_item = NULL;
+    json_data_array = NULL;
+    json_layers_array = NULL;
+
 #if DEBUG
     Log::d("clearing tile_pool");
 #endif // DEBUG
     tile_pool.clear();
 
     for (Spritesheet& spritesheet : spritesheet_pool) {
-        tmj = spritesheet.get_json();
+        json_tmj = spritesheet.get_json();
         texture_spritesheet = spritesheet.get_texture();
 
-        if ( ! tmj.is_object()) {
-            throw std::runtime_error("Top level tmj JSON value is not an object");
-        }
-
-#if DEBUG
+#if DEBUG_VERBOSE
         Log::d("getting tile height and width");
 #endif // DEBUG
-        spritesheet_tile_height = tmj["tileheight"];
-        spritesheet_tile_width = tmj["tilewidth"];
+
+        json = cJSON_GetObjectItemCaseSensitive(json_tmj, "tileheight");
+        spritesheet_tile_height = json->valueint;
+
+        json = cJSON_GetObjectItemCaseSensitive(json_tmj, "tilewidth");
+        spritesheet_tile_width = json->valueint;
 
         if (32 != spritesheet_tile_height || 32 != spritesheet_tile_width) {
             throw std::runtime_error("Spritesheet tile size is not 32x32");
         }
 
-        auto layers_array = tmj["layers"];
-        if (1 != layers_array.size()) {
-            throw std::runtime_error("Spritesheet JSON does not contain 1 layer");
+        json_layers_array = cJSON_GetObjectItemCaseSensitive(
+            json_tmj, "layers");
+        if (1 != cJSON_GetArraySize(json_layers_array)) {
+            throw std::runtime_error(
+                "Spritesheet JSON does not contain 1 layer");
         }
 
-        item = layers_array[0];
-        auto data_array = item["data"];
-        spritesheet_width = item["width"];
+        json = cJSON_GetArrayItem(json_layers_array, 0);
+        json_data_array = cJSON_GetObjectItemCaseSensitive(json, "data");
 
-        for (auto data_item : data_array) {
+        json = cJSON_GetObjectItemCaseSensitive(json, "width");
+        spritesheet_width = json->valueint;
+
+        cJSON_ArrayForEach(json_data_item, json_data_array) {
+            if ( ! cJSON_IsNumber(json_data_item)) {
+                throw std::runtime_error("Data array item is not a number.");
+            }
+
             // ID for spritesheet and GID for whole map
-            unsigned int tiled_id = data_item;
-            unsigned int tiled_gid = spritesheet.get_tiled_firstgid() - 1 + tiled_id;
+            tiled_id = json_data_item->valueint;
+            tiled_gid = spritesheet.get_tiled_firstgid() - 1 + tiled_id;
 
             if (0 == tiled_id) {
                 break;
@@ -105,14 +133,23 @@ void GraphicsUtil::generate_tiles_map(spritesheet_pool& spritesheet_pool, tile_p
     }
 }
 
+/*
+ * TODO write a test if feasible:
+ * https://github.com/pottumuusi/rogue-forever/issues/24
+ */
 void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_pool& tile_pool_player)
 {
     int spritesheet_tile_height;
     int spritesheet_tile_width;
     int spritesheet_width;
 
-    nlohmann::json tmj;
-    nlohmann::json item;
+    unsigned int tiled_id;
+
+    cJSON* json;
+    cJSON* json_tmj;
+    cJSON* json_data_item;
+    cJSON* json_data_array;
+    cJSON* json_layers_array;
 
     std::shared_ptr<SDL_Texture> texture_spritesheet;
 
@@ -120,31 +157,48 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
     spritesheet_tile_width = -1;
     spritesheet_width = -1;
 
-    tmj = spritesheet_player.get_json();
+    tiled_id = 0;
+
+    json = NULL;
+    json_tmj = NULL;
+    json_data_item = NULL;
+    json_data_array = NULL;
+    json_layers_array = NULL;
+
+    json_tmj = spritesheet_player.get_json();
     texture_spritesheet = spritesheet_player.get_texture();
 
-    if ( ! tmj.is_object()) {
-        throw std::runtime_error("Top level player tmj JSON value is not an object");
-    }
+    json = cJSON_GetObjectItemCaseSensitive(json_tmj, "tileheight");
+    spritesheet_tile_height = json->valueint;
 
-    spritesheet_tile_height = tmj["tileheight"];
-    spritesheet_tile_width = tmj["tilewidth"];
+    json = cJSON_GetObjectItemCaseSensitive(json_tmj, "tilewidth");
+    spritesheet_tile_width = json->valueint;
 
     if (32 != spritesheet_tile_height || 32 != spritesheet_tile_width) {
         throw std::runtime_error("Player spritesheet tile size is not 32x32");
     }
 
-    auto layers_array = tmj["layers"];
-    if (1 != layers_array.size()) {
+    json_layers_array = cJSON_GetObjectItemCaseSensitive(json_tmj, "layers");
+    if ( ! cJSON_IsArray(json_layers_array)) {
+        throw std::runtime_error(
+            "'layers' of player spritesheet JSON is not an array");
+    }
+    if (1 != cJSON_GetArraySize(json_layers_array)) {
         throw std::runtime_error("Player spritesheet JSON does not contain 1 layer");
     }
 
-    item = layers_array[0];
-    auto data_array = item["data"];
-    spritesheet_width = item["width"];
+    json = cJSON_GetArrayItem(json_layers_array, 0);
+    json_data_array = cJSON_GetObjectItemCaseSensitive(json, "data");
 
-    for (auto data_item : data_array) {
-        unsigned int tiled_id = data_item;
+    json = cJSON_GetObjectItemCaseSensitive(json, "width");
+    spritesheet_width = json->valueint;
+
+    cJSON_ArrayForEach(json_data_item, json_data_array) {
+        if ( ! cJSON_IsNumber(json_data_item)) {
+            throw std::runtime_error("Data array item is not a number.");
+        }
+
+        tiled_id = json_data_item->valueint;
 
         if (0 == tiled_id) {
             break;
@@ -169,24 +223,54 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
  * Load all spritesheets whose components are included in a map. When
  * components of a spritesheet are used in a map, Tiled adds an entry
  * to `tilesets` list of map tmj files.
+ *
+ * TODO write a test if feasible:
+ * https://github.com/pottumuusi/rogue-forever/issues/24
  */
-void GraphicsUtil::load_spritesheets_map(spritesheet_pool& spritesheet_pool, Map& map)
+void GraphicsUtil::load_spritesheets_map(
+    spritesheet_pool& spritesheet_pool,
+    Map& map)
 {
-    nlohmann::json tmj;
+    cJSON* json;
+    cJSON* json_tmj;
+    cJSON* json_tileset;
+    cJSON* json_tilesets_array;
 
     std::string tileset_source;
     std::vector<std::string> tileset_names;
 
-    tmj = map.getTmj();
-    if ( ! tmj.is_object()) {
-        throw std::runtime_error("Top level map .tmj JSON value is not an object");
+    unsigned int json_tilesets_size;
+
+    json = NULL;
+    json_tmj = NULL;
+    json_tileset = NULL;
+    json_tilesets_array = NULL;
+    json_tilesets_size = 0;
+
+    json_tmj = map.getTmj();
+    if ( ! cJSON_IsObject(json_tmj)) {
+        throw std::runtime_error(
+            "Top level map .tmj JSON value is not an object");
     }
 
-    auto tilesets = tmj["tilesets"];
+    json_tilesets_array = cJSON_GetObjectItemCaseSensitive(json_tmj, "tilesets");
+    if ( ! cJSON_IsArray(json_tilesets_array)) {
+        throw std::runtime_error("'tilesets' of tmj is not an array");
+    }
 
-    for (auto tileset : tilesets) {
-        tileset_source = tileset["source"];
+    json_tilesets_size = cJSON_GetArraySize(json_tilesets_array);
+    for (unsigned int i = 0; i < json_tilesets_size; i++) {
+        json_tileset = cJSON_GetArrayItem(json_tilesets_array, i);
+        if ( ! cJSON_IsObject(json_tileset)) {
+            throw std::runtime_error("tileset is not an object");
+        }
 
+        json = cJSON_GetObjectItemCaseSensitive(json_tileset, "source");
+        if ( ! cJSON_IsString(json)) {
+            throw std::runtime_error("Tileset source is not a string");
+        }
+
+        tileset_source = json->valuestring;
         tileset_names.push_back(tileset_source);
     }
 
@@ -205,7 +289,11 @@ void GraphicsUtil::load_spritesheet_player(Spritesheet& spritesheet_player)
     spritesheet_player = Spritesheet(Spritesheet::spritesheet_name_player);
 }
 
-// Keeping as a reference for using std::filesystem
+/* Keeping as a reference for using std::filesystem
+ *
+ * TODO remove when the project is written in C.
+ * https://github.com/pottumuusi/rogue-forever/issues/30
+ */
 void GraphicsUtil::generateTileIdMapFile(tile_id_map& tileIdMap)
 {
     int currentId = 0;

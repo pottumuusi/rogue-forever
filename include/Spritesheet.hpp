@@ -31,7 +31,7 @@ public:
 
     std::string get_name(void) const;
     std::shared_ptr<SDL_Texture> get_texture(void);
-    nlohmann::json get_json(void);
+    cJSON* get_json(void);
     int get_tiled_firstgid(void) const;
 
     static const std::array<std::string, SPRITESHEET_POOL_SIZE> spritesheet_names;
@@ -40,7 +40,7 @@ public:
 private:
     std::string name;
     std::shared_ptr<SDL_Texture> texture;
-    nlohmann::json json;
+    cJSON* json_spritesheet;
     int tiledFirstgid;
 
     void load_texture(std::string pathImage);
