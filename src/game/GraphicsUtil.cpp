@@ -292,6 +292,7 @@ void GraphicsUtil::load_spritesheet_player(Spritesheet& spritesheet_player)
 /* Keeping as a reference for using std::filesystem
  *
  * TODO remove when the project is written in C.
+ * https://github.com/pottumuusi/rogue-forever/issues/30
  */
 void GraphicsUtil::generateTileIdMapFile(tile_id_map& tileIdMap)
 {
