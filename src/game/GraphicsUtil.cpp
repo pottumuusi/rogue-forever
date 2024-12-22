@@ -57,23 +57,6 @@ void GraphicsUtil::generate_tiles_map(
 #endif // DEBUG
     tile_pool.clear();
 
-    // TODO remove void casts
-    (void) spritesheet_pool;
-    (void) tile_pool;
-
-    (void) spritesheet_tile_height;
-    (void) spritesheet_tile_width;
-    (void) spritesheet_width;
-
-    (void) json;
-    (void) json_tmj;
-
-    (void) texture_spritesheet;
-
-    (void) spritesheet_tile_height;
-    (void) spritesheet_tile_width;
-    (void) spritesheet_width;
-
     for (Spritesheet& spritesheet : spritesheet_pool) {
         json_tmj = spritesheet.get_json();
         texture_spritesheet = spritesheet.get_texture();
@@ -169,10 +152,6 @@ void GraphicsUtil::generate_tiles_player(Spritesheet& spritesheet_player, tile_p
     cJSON* json_layers_array;
 
     std::shared_ptr<SDL_Texture> texture_spritesheet;
-
-    // TODO remove void casts
-    (void) spritesheet_player;
-    (void) tile_pool_player;
 
     spritesheet_tile_height = -1;
     spritesheet_tile_width = -1;
