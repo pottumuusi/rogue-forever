@@ -8,7 +8,6 @@ readonly INSTALL_GTEST="TRUE"
 readonly INSTALL_CMAKE="TRUE"
 readonly INSTALL_CPP_COMPILER="TRUE"
 readonly INSTALL_CJSON="TRUE"
-readonly INSTALL_NLOHMANNJSON="TRUE" # TODO set to false
 readonly INSTALL_WGET="TRUE"
 readonly INSTALL_GIT="TRUE"
 readonly INSTALL_UNZIP="TRUE"
@@ -86,10 +85,6 @@ main() {
         install_cjson
     fi
 
-    if [ "TRUE" == "${INSTALL_NLOHMANNJSON}" ] ; then
-        install_nlohmannjson
-    fi
-
     pushd ./deps_install_workarea
     if [ "TRUE" == "${INSTALL_GTEST}" ] ; then
         ../install_gtest.sh
@@ -138,21 +133,6 @@ install_cjson() {
     rm --verbose -rf ${cjson_repo}
 
     popd # ${ROGUE_FOREVER_BASE_PATH}/external
-}
-
-install_nlohmannjson() {
-    pushd ../external
-
-    if [ ! -d nlohmann ] ; then
-        mkdir nlohmann
-    fi
-
-    pushd nlohmann
-
-    wget https://raw.githubusercontent.com/nlohmann/json/v3.11.3/single_include/nlohmann/json.hpp
-
-    popd # nlohmann
-    popd # ../external
 }
 
 main
