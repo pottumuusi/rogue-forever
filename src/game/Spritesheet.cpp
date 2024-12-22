@@ -63,12 +63,12 @@ std::shared_ptr<SDL_Texture> Spritesheet::get_texture(void)
 
 cJSON* Spritesheet::get_json(void)
 {
-    if ( ! cJSON_IsObject(json)) {
+    if ( ! cJSON_IsObject(json_spritesheet)) {
         throw std::runtime_error(
             "Top level spritesheet JSON value is not an object");
     }
 
-    return json;
+    return json_spritesheet;
 }
 
 int Spritesheet::get_tiled_firstgid(void) const
@@ -97,7 +97,7 @@ void Spritesheet::load_texture(std::string pathImage)
 
 void Spritesheet::load_json(std::string pathJson)
 {
-    json = Json::readFromFile(pathJson);
+    json_spritesheet = Json::readFromFile(pathJson);
 }
 
 void Spritesheet::fetch_firstgid(Map& map)

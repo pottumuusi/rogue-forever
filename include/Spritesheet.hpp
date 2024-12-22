@@ -40,7 +40,7 @@ public:
 private:
     std::string name;
     std::shared_ptr<SDL_Texture> texture;
-    cJSON* json; // TODO rename 'json_spritesheet'
+    cJSON* json_spritesheet;
     int tiledFirstgid;
 
     void load_texture(std::string pathImage);
