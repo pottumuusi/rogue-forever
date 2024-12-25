@@ -1,6 +1,14 @@
 # rogue_forever
 A dungeon crawler
 
+How to install
+==============
+Linux
+-----
+
+Windows
+-------
+
 How to run
 ==========
 Linux
