@@ -24,8 +24,11 @@ jobs:
     - name: Print summary of latest commit
       run: git show --stat HEAD
 
+    - name: Install prerequisites
+      run: which jq || sudo apt install jq
+
     - name: Test reading project issues
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:
-        gh api https://api.github.com/repos/pottumuusi/rogue-forever/issues
+        ./scripts/test_github_api.sh
