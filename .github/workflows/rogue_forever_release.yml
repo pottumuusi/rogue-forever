@@ -19,7 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        ref: ${{ github.event.inputs.release_tag }}
+        ref: 35-first-release-test-github-api
+        # ref: ${{ github.event.inputs.release_tag }}
 
     - name: Print summary of latest commit
       run: git show --stat HEAD
