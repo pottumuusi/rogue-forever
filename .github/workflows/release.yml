@@ -1,16 +1,22 @@
 name: Release
 
 on:
+  # workflow_dispatch: needs to be in main branch before 'Run workflow'
+  # button appears on GitHub actions page.
   workflow_dispatch:
     inputs:
-      placeholder:
-        description: "Placeholder"
+      release_tag:
+        description: "Git tag to checkout for releasing"
 
 jobs:
-  placeholder:
+  new_release:
 
     runs-on: ubuntu-latest
 
     steps:
-    - name: placeholder
-      run: echo Placeholder running
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.inputs.release_tag }}
+
+    - name: Print summary of latest commit
+      run: git show --stat HEAD
