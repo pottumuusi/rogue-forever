@@ -1,6 +1,8 @@
 #ifndef MAP_HPP_DEFINED
 #define MAP_HPP_DEFINED
 
+#include <cstdint>
+
 #include "Json.hpp"
 
 class Map
