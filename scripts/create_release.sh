@@ -19,5 +19,6 @@ main() {
         -H "X-GitHub-Api-Version: 2022-11-28" \
         https://api.github.com/repos/OWNER/REPO/releases \
         -d "{\"tag_name\":\"${RELEASE_TAG}\"}"
+}
 
 main "${@}"
