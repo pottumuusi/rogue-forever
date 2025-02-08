@@ -1,4 +1,4 @@
-name: Release
+name: Release Rogue Forever
 
 on:
   # workflow_dispatch: needs to be in main branch before 'Run workflow'
