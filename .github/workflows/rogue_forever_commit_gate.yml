@@ -1,4 +1,4 @@
-name: Makefile CI
+name: Rogue Forever commit gate
 
 on:
   push:
