@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_HPP_DEFINED
 #define CONSTANTS_HPP_DEFINED
 
+#include <cstdint>
 #include <string>
 
 #define DEBUG 1

@@ -1,4 +1,7 @@
-name: Release
+name: Release Rogue Forever
+
+# GitHub actions permissions can be changed from:
+# Settings -> Actions -> General
 
 on:
   # workflow_dispatch: needs to be in main branch before 'Run workflow'
