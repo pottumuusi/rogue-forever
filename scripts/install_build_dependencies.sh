@@ -47,6 +47,7 @@ main() {
     pushd deps_install_workarea
 
     if [ "TRUE" == "${INSTALL_CMAKE}" ] ; then
+        # TODO use single apt update before all apt install commands
         sudo apt update
         sudo apt install -y cmake
     fi
