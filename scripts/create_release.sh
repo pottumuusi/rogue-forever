@@ -21,12 +21,9 @@ install_prerequisites() {
     echo "Installing prerequisites"
 
     sudo apt update
-
     sudo apt -y upgrade
 
-    # TODO uncomment or remove
-    # which jq || sudo apt install jq
-
+    which jq || sudo apt install jq
     which zip || sudo apt install zip
 }
 
