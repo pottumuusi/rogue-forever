@@ -76,6 +76,7 @@ main() {
     local -r github_api_version="2022-11-28"
 
     local output_curl=''
+    local uploaded_asset_name=''
     local rogue_forever_upload_url=''
 
     if [ -z "${GH_TOKEN}" ] ; then
@@ -98,34 +99,44 @@ main() {
         -H "X-GitHub-Api-Version: ${github_api_version}" \
         https://api.github.com/repos/pottumuusi/rogue-forever/releases \
         -d "{\"tag_name\":\"${RELEASE_TAG}\"}")"
-
-    rogue_forever_upload_url=$(echo ${output_curl} \
+    rogue_forever_upload_url="$(echo ${output_curl} \
         | jq '.upload_url' \
         | cut -d '{' -f 1 \
-        | tr -d \")
-
+        | tr -d \")"
     if [ "null" == "${rogue_forever_upload_url}" ] ; then
         error_exit "Assets URL is null"
     fi
 
     # Post release assets to GitHub
-    curl -L \
+    output_curl="$(curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${GH_TOKEN}" \
         -H "X-GitHub-Api-Version: ${github_api_version}" \
         -H "Content-Type: application/octet-stream" \
         "${rogue_forever_upload_url}?name=${RELEASE_ZIP_LINUX}" \
-        --data-binary "@${RELEASE_ZIP_LINUX}"
+        --data-binary "@${RELEASE_ZIP_LINUX}")"
+    uploaded_asset_name=$(echo ${output_curl} \
+        | jq '.name' \
+        | tr -d \")
+    if [ "${uploaded_asset_name}" != "${RELEASE_ZIP_LINUX}" ] ; then
+        error_exit "Linux release zip name not detected from response."
+    fi
 
-    curl -L \
+    output_curl="$(curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${GH_TOKEN}" \
         -H "X-GitHub-Api-Version: ${github_api_version}" \
         -H "Content-Type: application/octet-stream" \
         "${rogue_forever_upload_url}?name=${RELEASE_ZIP_WINDOWS}" \
-        --data-binary "@${RELEASE_ZIP_WINDOWS}"
+        --data-binary "@${RELEASE_ZIP_WINDOWS}")"
+    uploaded_asset_name=$(echo ${output_curl} \
+        | jq '.name' \
+        | tr -d \")
+    if [ "${uploaded_asset_name}" != "${RELEASE_ZIP_WINDOWS}" ] ; then
+        error_exit "Windows release zip name not detected from response."
+    fi
 
     popd # ${ROGUE_FOREVER_BASE_PATH}
 }
