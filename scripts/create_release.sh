@@ -66,7 +66,7 @@ main() {
     local -r github_api_version="2022-11-28"
 
     local output_curl=''
-    local rogue_forever_assets_url=''
+    local rogue_forever_upload_url=''
 
     if [ -z "${GH_TOKEN}" ] ; then
         error_exit "GH_TOKEN is empty. Please set a value for GH_TOKEN."
@@ -92,10 +92,13 @@ main() {
     # TODO Upload release packages
     echo "ABTEST output_curl is: ${output_curl}"
 
-    rogue_forever_assets_url=$(echo ${output_curl} | jq '.assets_url' | tr -d \")
+    rogue_forever_upload_url=$(echo ${output_curl} \
+        | jq '.upload_url' \
+        | cut -d '{' -f 1 \
+        | tr -d \")
 
-    echo "ABTEST rogue_forever_assets_url is: ${rogue_forever_assets_url}"
-    if [ "null" == "${rogue_forever_assets_url}" ] ; then
+    echo "ABTEST rogue_forever_upload_url is: ${rogue_forever_upload_url}"
+    if [ "null" == "${rogue_forever_upload_url}" ] ; then
         error_exit "Assets URL is null"
     fi
 
@@ -107,7 +110,7 @@ main() {
         -H "Authorization: Bearer ${GH_TOKEN}" \
         -H "X-GitHub-Api-Version: ${github_api_version}" \
         -H "Content-Type: application/octet-stream" \
-        "${rogue_forever_assets_url}?name=${RELEASE_ZIP_LINUX}" \
+        "${rogue_forever_upload_url}?name=${RELEASE_ZIP_LINUX}" \
         --data-binary "@${RELEASE_ZIP_LINUX}"
 
     popd # ${ROGUE_FOREVER_BASE_PATH}
