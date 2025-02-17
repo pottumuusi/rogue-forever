@@ -25,10 +25,6 @@ jobs:
     - name: Print summary of latest commit
       run: git show --stat HEAD
 
-    # TODO move to a script
-    - name: Install prerequisites
-      run: which jq || sudo apt install jq
-
     # TODO remove
     - name: Test reading project issues
       env:
