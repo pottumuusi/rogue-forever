@@ -51,8 +51,6 @@ create_release_package_windows() {
 }
 
 create_release_packages() {
-    pushd ${ROGUE_FOREVER_BASE_PATH}
-
     if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
         ./scripts/install_build_dependencies.sh
 
@@ -62,8 +60,6 @@ create_release_packages() {
     create_release_package_linux
 
     # create_release_package_windows
-
-    popd # ${ROGUE_FOREVER_BASE_PATH}
 }
 
 main() {
@@ -75,6 +71,8 @@ main() {
     if [ -z "${GH_TOKEN}" ] ; then
         error_exit "GH_TOKEN is empty. Please set a value for GH_TOKEN."
     fi
+
+    pushd ${ROGUE_FOREVER_BASE_PATH}
 
     echo -e "ABTEST RELEASE_TAG is: ${RELEASE_TAG}"
 
@@ -90,6 +88,10 @@ main() {
         -H "X-GitHub-Api-Version: ${github_api_version}" \
         https://api.github.com/repos/pottumuusi/rogue-forever/releases \
         -d "{\"tag_name\":\"${RELEASE_TAG}\"}")"
+    echo ABTEST printing exit code: $? # check if it is from subshell
+
+    echo ABTEST exiting early due to exit code checking
+    exit 1
 
     # TODO Upload release packages
     echo "ABTEST output_curl is: ${output_curl}"
@@ -108,6 +110,8 @@ main() {
         -H "Content-Type: application/octet-stream" \
         "${rogue_forever_assets_url}?name=${RELEASE_ZIP_LINUX}" \
         --data-binary "@${RELEASE_ZIP_LINUX}"
+
+    popd # ${ROGUE_FOREVER_BASE_PATH}
 }
 
 main "${@}"
