@@ -5,6 +5,7 @@ set -e
 readonly RELEASE_DIRECTORY_LINUX="rogue-forever-linux-${RELEASE_TAG}"
 readonly RELEASE_DIRECTORY_WINDOWS="rogue-forever-windows-${RELEASE_TAG}"
 readonly RELEASE_ZIP_LINUX="${RELEASE_DIRECTORY_LINUX}.zip"
+readonly RELEASE_ZIP_WINDOWS="${RELEASE_DIRECTORY_WINDOWS}.zip"
 
 readonly TEMP_SKIP_BUILDS="TRUE"
 
@@ -34,7 +35,9 @@ create_release_package_linux() {
 
     mkdir ${RELEASE_DIRECTORY_LINUX}
 
-    cp scripts/install_runtime_dependencies_release.sh ${RELEASE_DIRECTORY_LINUX}
+    cp \
+        scripts/install_runtime_dependencies_release.sh \
+        ${RELEASE_DIRECTORY_LINUX}
 
     # TODO move all remaining release contents
 
@@ -42,7 +45,19 @@ create_release_package_linux() {
 }
 
 create_release_package_windows() {
-    error_exit "create_release_package_windows is not yet implemented"
+    mkdir ${RELEASE_DIRECTORY_WINDOWS}
+
+    if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
+        make windows
+    fi
+
+    cp \
+        scripts/install_runtime_dependencies_release.ps1 \
+        ${RELEASE_DIRECTORY_WINDOWS}
+
+    # TODO move all remaining release contents
+
+    zip -r "${RELEASE_ZIP_WINDOWS}" "${RELEASE_DIRECTORY_WINDOWS}"
 }
 
 create_release_packages() {
@@ -54,7 +69,7 @@ create_release_packages() {
 
     create_release_package_linux
 
-    # create_release_package_windows
+    create_release_package_windows
 }
 
 main() {
@@ -102,6 +117,15 @@ main() {
         -H "Content-Type: application/octet-stream" \
         "${rogue_forever_upload_url}?name=${RELEASE_ZIP_LINUX}" \
         --data-binary "@${RELEASE_ZIP_LINUX}"
+
+    curl -L \
+        -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${GH_TOKEN}" \
+        -H "X-GitHub-Api-Version: ${github_api_version}" \
+        -H "Content-Type: application/octet-stream" \
+        "${rogue_forever_upload_url}?name=${RELEASE_ZIP_WINDOWS}" \
+        --data-binary "@${RELEASE_ZIP_WINDOWS}"
 
     popd # ${ROGUE_FOREVER_BASE_PATH}
 }
