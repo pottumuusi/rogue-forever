@@ -34,12 +34,10 @@ create_release_package_linux() {
 
     mkdir ${RELEASE_DIRECTORY_LINUX}
 
-    # TODO move release content scripts/install_runtime_dependencies_release.sh
     cp scripts/install_runtime_dependencies_release.sh ${RELEASE_DIRECTORY_LINUX}
 
     # TODO move all remaining release contents
 
-    # TODO create release zip
     zip -r "${RELEASE_ZIP_LINUX}" "${RELEASE_DIRECTORY_LINUX}"
 }
 
@@ -86,21 +84,16 @@ main() {
         https://api.github.com/repos/pottumuusi/rogue-forever/releases \
         -d "{\"tag_name\":\"${RELEASE_TAG}\"}")"
 
-    # TODO Upload release packages
-    echo "ABTEST output_curl is: ${output_curl}"
-
     rogue_forever_upload_url=$(echo ${output_curl} \
         | jq '.upload_url' \
         | cut -d '{' -f 1 \
         | tr -d \")
 
-    echo "ABTEST rogue_forever_upload_url is: ${rogue_forever_upload_url}"
     if [ "null" == "${rogue_forever_upload_url}" ] ; then
         error_exit "Assets URL is null"
     fi
 
-    ls -l # TODO remove after debugging
-
+    # Post release assets to GitHub
     curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
