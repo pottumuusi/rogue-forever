@@ -98,6 +98,8 @@ main() {
 
     echo "ABTEST rogue_forever_assets_url is: ${rogue_forever_assets_url}"
 
+    ls -l # TODO remove after debugging
+
     curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
