@@ -31,7 +31,7 @@ install_prerequisites() {
 }
 
 create_release_package_linux() {
-    if [ "TRUE" == ${TEMP_SKIP_BUILDS} ] ; then
+    if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
         make
     fi
 
@@ -53,7 +53,7 @@ create_release_package_windows() {
 create_release_packages() {
     pushd ${ROGUE_FOREVER_BASE_PATH}
 
-    if [ "TRUE" == ${TEMP_SKIP_BUILDS} ] ; then
+    if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
         ./scripts/install_build_dependencies.sh
 
         make test
