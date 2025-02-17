@@ -53,9 +53,9 @@ create_release_package_windows() {
 create_release_packages() {
     pushd ${ROGUE_FOREVER_BASE_PATH}
 
-    ./scripts/install_build_dependencies.sh
-
     if [ "TRUE" == ${TEMP_SKIP_BUILDS} ] ; then
+        ./scripts/install_build_dependencies.sh
+
         make test
     fi
 
