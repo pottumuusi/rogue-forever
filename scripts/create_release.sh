@@ -61,7 +61,7 @@ create_release_packages() {
 
     create_release_package_linux
 
-    create_release_package_windows
+    # create_release_package_windows
 
     popd # ${ROGUE_FOREVER_BASE_PATH}
 }
