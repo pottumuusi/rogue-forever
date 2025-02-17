@@ -88,10 +88,6 @@ main() {
         -H "X-GitHub-Api-Version: ${github_api_version}" \
         https://api.github.com/repos/pottumuusi/rogue-forever/releases \
         -d "{\"tag_name\":\"${RELEASE_TAG}\"}")"
-    echo ABTEST printing exit code: $? # check if it is from subshell
-
-    echo ABTEST exiting early due to exit code checking
-    exit 1
 
     # TODO Upload release packages
     echo "ABTEST output_curl is: ${output_curl}"
@@ -99,6 +95,9 @@ main() {
     rogue_forever_assets_url=$(echo ${output_curl} | jq '.assets_url' | tr -d \")
 
     echo "ABTEST rogue_forever_assets_url is: ${rogue_forever_assets_url}"
+    if [ "null" == "${rogue_forever_assets_url}" ] ; then
+        error_exit "Assets URL is null"
+    fi
 
     ls -l # TODO remove after debugging
 
