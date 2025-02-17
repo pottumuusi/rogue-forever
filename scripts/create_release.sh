@@ -67,7 +67,10 @@ create_release_packages() {
 }
 
 main() {
+    local -r github_api_version="2022-11-28"
+
     local output_curl=''
+    local rogue_forever_assets_url=''
 
     if [ -z "${GH_TOKEN}" ] ; then
         error_exit "GH_TOKEN is empty. Please set a value for GH_TOKEN."
@@ -84,12 +87,25 @@ main() {
         -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${GH_TOKEN}" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
+        -H "X-GitHub-Api-Version: ${github_api_version}" \
         https://api.github.com/repos/pottumuusi/rogue-forever/releases \
         -d "{\"tag_name\":\"${RELEASE_TAG}\"}")"
 
     # TODO Upload release packages
-    echo output_curl is: ${output_curl}
+    echo "ABTEST output_curl is: ${output_curl}"
+
+    rogue_forever_assets_url=$(echo ${output_curl} | jq '.assets_url' | tr -d \")
+
+    echo "ABTEST rogue_forever_assets_url is: ${rogue_forever_assets_url}"
+
+    curl -L \
+        -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${GH_TOKEN}" \
+        -H "X-GitHub-Api-Version: ${github_api_version}" \
+        -H "Content-Type: application/octet-stream" \
+        "${rogue_forever_assets_url}?name=${RELEASE_ZIP_LINUX}" \
+        --data-binary "@${RELEASE_ZIP_LINUX}"
 }
 
 main "${@}"
