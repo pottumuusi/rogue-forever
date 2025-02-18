@@ -43,7 +43,7 @@ if ("TRUE" -ceq "$install_sdl2") {
         -OutFile $download_destination\$sdl2_zip
     Invoke-WebRequest `
         -Uri https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/$sdl2_image_zip `
-        -OutFile $download_destination\$sdl2_zip
+        -OutFile $download_destination\$sdl2_image_zip
 
     Expand-Archive $sdl2_zip -DestinationPath $sdl2_dir
     Expand-Archive $sdl2_image_zip -DestinationPath $sdl2_image_dir
