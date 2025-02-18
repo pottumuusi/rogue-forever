@@ -18,8 +18,8 @@ $download_destination = $PSScriptRoot
 if ("TRUE" -ceq "$install_assets") {
     Write-Output 'Installing assets'
 
-    Invoke-WebRequest \
-        -Uri http://gitlab.justworks.today/rogue-forever/$assets_zip
+    Invoke-WebRequest `
+        -Uri http://gitlab.justworks.today/rogue-forever/$assets_zip `
         -OutFile $download_destination\$assets_zip
 
     Expand-Archive $assets_basic -DestinationPath .\
@@ -28,8 +28,8 @@ if ("TRUE" -ceq "$install_assets") {
 if ("TRUE" -ceq "$install_maps") {
     Write-Output 'Installing maps'
 
-    Invoke-WebRequest \
-        -Uri http://gitlab.justworks.today/rogue-forever/$maps_zip
+    Invoke-WebRequest `
+        -Uri http://gitlab.justworks.today/rogue-forever/$maps_zip `
         -OutFile $download_destination\$maps_zip
 
     Expand-Archive $maps_zip -DestinationPath .\
@@ -38,11 +38,11 @@ if ("TRUE" -ceq "$install_maps") {
 if ("TRUE" -ceq "$install_sdl2") {
     Write-Output 'Installing SDL2'
 
-    Invoke-WebRequest \
-        -Uri https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/$sdl2_zip \
+    Invoke-WebRequest `
+        -Uri https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/$sdl2_zip `
         -OutFile $download_destination\$sdl2_zip
-    Invoke-WebRequest \
-        -Uri https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/$sdl2_image_zip \
+    Invoke-WebRequest `
+        -Uri https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/$sdl2_image_zip `
         -OutFile $download_destination\$sdl2_zip
 
     Expand-Archive $sdl2_zip -DestinationPath $sdl2_dir
