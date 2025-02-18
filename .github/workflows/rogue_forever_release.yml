@@ -25,13 +25,6 @@ jobs:
     - name: Print summary of latest commit
       run: git show --stat HEAD
 
-    # TODO remove
-    - name: Test reading project issues
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run:
-        ./scripts/test_github_api.sh
-
     - name: Create release
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
