@@ -49,5 +49,5 @@ if ("TRUE" -ceq "$install_sdl2") {
     Expand-Archive $sdl2_image_zip -DestinationPath $sdl2_image_dir
 
     Move-Item $sdl2_dir\SDL2.dll .\
-    Move-Item $sdl2_dir\SDL2_image.dll .\
+    Move-Item $sdl2_image_dir\SDL2_image.dll .\
 }
