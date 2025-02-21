@@ -22,7 +22,7 @@ if ("TRUE" -ceq "$install_assets") {
         -Uri http://gitlab.justworks.today/rogue-forever/$assets_zip `
         -OutFile $download_destination\$assets_zip
 
-    Expand-Archive $assets_basic -DestinationPath .\
+    Expand-Archive $assets_zip -DestinationPath .\
 }
 
 if ("TRUE" -ceq "$install_maps") {
