@@ -5,6 +5,7 @@
 $install_assets = 'TRUE'
 $install_maps = 'TRUE'
 $install_sdl2 = 'TRUE'
+$run_cleanup = 'TRUE'
 
 $sdl2_dir = 'SDL2-2.30.6-win32-x64'
 $sdl2_zip = 'SDL2-2.30.6-win32-x64.zip'
@@ -50,4 +51,13 @@ if ("TRUE" -ceq "$install_sdl2") {
 
     Move-Item $sdl2_dir\SDL2.dll .\
     Move-Item $sdl2_image_dir\SDL2_image.dll .\
+}
+
+if ("TRUE" -ceq "$run_cleanup") {
+    Remove-Item -Recurse $sdl2_dir
+    Remove-Item -Recurse $sdl2_image_dir
+    Remove-Item $sdl2_zip
+    Remove-Item $sdl2_image_zip
+    Remove-Item $assets_zip
+    Remove-Item $maps_zip
 }
