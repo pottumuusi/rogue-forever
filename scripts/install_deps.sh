@@ -9,14 +9,13 @@ readonly INSTALL_SDL_IMAGE="TRUE"
 readonly INSTALL_GTEST="TRUE"
 readonly INSTALL_CMAKE="TRUE"
 readonly INSTALL_CPP_COMPILER="TRUE"
-readonly INSTALL_CJSON="FALSE"
-readonly INSTALL_NLOHMANNJSON="TRUE"
+readonly INSTALL_CJSON="TRUE"
 readonly INSTALL_WGET="TRUE"
 readonly INSTALL_GIT="TRUE"
 readonly INSTALL_UNZIP="TRUE"
 readonly INSTALL_MINGW_64="TRUE"
-readonly INSTALL_SDL_MINGW_LIBRARY="TRUE"
-readonly INSTALL_SDL_IMAGE_MINGW_LIBRARY="TRUE"
+readonly INSTALL_SDL_MINGW="TRUE"
+readonly INSTALL_SDL_IMAGE_MINGW="TRUE"
 
 cd $(dirname $0)
 
@@ -96,11 +95,11 @@ main() {
         popd
     fi
 
-    if [ "TRUE" == "${INSTALL_SDL_MINGW_LIBRARY}" ] ; then
+    if [ "TRUE" == "${INSTALL_SDL_MINGW}" ] ; then
         install_sdl_mingw
     fi
 
-    if [ "TRUE" == "${INSTALL_SDL_IMAGE_MINGW_LIBRARY}" ] ; then
+    if [ "TRUE" == "${INSTALL_SDL_IMAGE_MINGW}" ] ; then
         install_sdl_image_mingw
     fi
 
@@ -124,7 +123,6 @@ error_exit() {
     exit 1
 }
 
-# TODO install by just copying the header and C file, instead of using cmake.
 install_cjson() {
     local -r install_using_cmake="FALSE"
     local -r install_by_copying="TRUE"
@@ -162,6 +160,7 @@ install_cjson() {
 }
 
 install_sdl_mingw() {
+    local -r sdl2_mingw_zip="SDL2-devel-2.30.6-mingw.zip"
     local -r destination_path_lib="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/SDL2-2.30.6/x86_64-w64-mingw32/"
     local -r destination_path_include="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/combined/"
 
@@ -175,8 +174,8 @@ install_sdl_mingw() {
         mkdir -p ${destination_path_include}
     fi
 
-    wget https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/SDL2-devel-2.30.6-mingw.zip
-    unzip SDL2-devel-2.30.6-mingw.zip
+    wget "https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/${sdl2_mingw_zip}"
+    unzip "${sdl2_mingw_zip}"
     cp --verbose -r SDL2-2.30.6/x86_64-w64-mingw32/lib/ ${destination_path_lib}
     cp --verbose -r SDL2-2.30.6/x86_64-w64-mingw32/include/ ${destination_path_include}
 
@@ -184,6 +183,7 @@ install_sdl_mingw() {
 }
 
 install_sdl_image_mingw() {
+    local -r sdl2_image_mingw_zip="SDL2_image-devel-2.8.2-mingw.zip"
     local -r destination_path_lib="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/SDL2_image-2.8.2/x86_64-w64-mingw32/"
     local -r destination_path_include="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/combined/"
 
@@ -197,8 +197,8 @@ install_sdl_image_mingw() {
         mkdir -p ${destination_path_include}
     fi
 
-    wget https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/SDL2_image-devel-2.8.2-mingw.zip
-    unzip SDL2_image-devel-2.8.2-mingw.zip
+    wget "https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/${sdl2_image_mingw_zip}"
+    unzip "${sdl2_image_mingw_zip}"
     cp --verbose -r SDL2_image-2.8.2/x86_64-w64-mingw32/lib/ ${destination_path_lib}
     cp --verbose -r SDL2_image-2.8.2/x86_64-w64-mingw32/include/ ${destination_path_include}
 
