@@ -7,8 +7,6 @@ readonly RELEASE_DIRECTORY_WINDOWS="rogue-forever-windows-${RELEASE_TAG}"
 readonly RELEASE_ZIP_LINUX="${RELEASE_DIRECTORY_LINUX}.zip"
 readonly RELEASE_ZIP_WINDOWS="${RELEASE_DIRECTORY_WINDOWS}.zip"
 
-readonly TEMP_SKIP_BUILDS="TRUE"
-
 cd $(dirname $0)
 
 readonly ROGUE_FOREVER_BASE_PATH="$(pushd .. &> /dev/null; pwd ; popd &> /dev/null)"
@@ -29,9 +27,7 @@ install_prerequisites() {
 }
 
 create_release_package_linux() {
-    if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
-        make
-    fi
+    make
 
     mkdir ${RELEASE_DIRECTORY_LINUX}
 
@@ -47,9 +43,7 @@ create_release_package_linux() {
 create_release_package_windows() {
     mkdir ${RELEASE_DIRECTORY_WINDOWS}
 
-    if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
-        make windows
-    fi
+    make windows
 
     cp \
         scripts/install_runtime_dependencies_release.ps1 \
@@ -61,11 +55,9 @@ create_release_package_windows() {
 }
 
 create_release_packages() {
-    if [ "TRUE" != ${TEMP_SKIP_BUILDS} ] ; then
-        ./scripts/install_build_dependencies.sh
+    ./scripts/install_build_dependencies.sh
 
-        make test
-    fi
+    make test
 
     create_release_package_linux
 
