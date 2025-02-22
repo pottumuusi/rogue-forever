@@ -21,6 +21,11 @@ cd $(dirname $0)
 
 readonly ROGUE_FOREVER_BASE_PATH="$(pushd .. &> /dev/null; pwd ; popd &> /dev/null)"
 
+error_exit() {
+    echo "${1}"
+    exit 1
+}
+
 main() {
     if [ ! -d "deps_install_workarea" ] ; then
         mkdir deps_install_workarea
@@ -116,11 +121,6 @@ main() {
     popd # ./deps_install_workarea
 
     rm -rf ./deps_install_workarea
-}
-
-error_exit() {
-    echo "${1}"
-    exit 1
 }
 
 install_cjson() {
