@@ -126,7 +126,7 @@ main() {
 
     post_new_release_to_github
     if [ "null" == "${rogue_forever_upload_url}" ] ; then
-        error_exit "Assets URL is null"
+        error_exit "Assets URL is null. Does the release already exist?"
     fi
 
     post_release_asset_to_github ${RELEASE_ZIP_LINUX}
