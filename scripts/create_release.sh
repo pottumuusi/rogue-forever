@@ -31,11 +31,13 @@ create_release_package_linux() {
 
     mkdir ${RELEASE_DIRECTORY_LINUX}
 
-    cp \
+    cp --verbose \
         scripts/install_runtime_dependencies_release.sh \
         ${RELEASE_DIRECTORY_LINUX}
 
-    # TODO move all remaining release contents
+    cp --verbose \
+        rogue_forever \
+        ${RELEASE_DIRECTORY_LINUX}
 
     zip -r "${RELEASE_ZIP_LINUX}" "${RELEASE_DIRECTORY_LINUX}"
 }
@@ -45,11 +47,13 @@ create_release_package_windows() {
 
     make windows
 
-    cp \
+    cp --verbose \
         scripts/install_runtime_dependencies_release.ps1 \
         ${RELEASE_DIRECTORY_WINDOWS}
 
-    # TODO move all remaining release contents
+    cp --verbose \
+        rogue_forever.exe \
+        ${RELEASE_DIRECTORY_WINDOWS}
 
     zip -r "${RELEASE_ZIP_WINDOWS}" "${RELEASE_DIRECTORY_WINDOWS}"
 }
