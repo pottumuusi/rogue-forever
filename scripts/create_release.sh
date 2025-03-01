@@ -2,9 +2,7 @@
 
 set -e
 
-readonly RELEASE_DIRECTORY_LINUX="rogue-forever-linux-${RELEASE_TAG}"
 readonly RELEASE_DIRECTORY_WINDOWS="rogue-forever-windows-${RELEASE_TAG}"
-readonly RELEASE_ZIP_LINUX="${RELEASE_DIRECTORY_LINUX}.zip"
 readonly RELEASE_ZIP_WINDOWS="${RELEASE_DIRECTORY_WINDOWS}.zip"
 
 cd $(dirname $0)
@@ -26,22 +24,6 @@ install_prerequisites() {
     which zip || sudo apt install zip
 }
 
-create_release_package_linux() {
-    make
-
-    mkdir ${RELEASE_DIRECTORY_LINUX}
-
-    cp --verbose \
-        scripts/install_runtime_dependencies_release.sh \
-        ${RELEASE_DIRECTORY_LINUX}
-
-    cp --verbose \
-        rogue_forever \
-        ${RELEASE_DIRECTORY_LINUX}
-
-    zip -r "${RELEASE_ZIP_LINUX}" "${RELEASE_DIRECTORY_LINUX}"
-}
-
 create_release_package_windows() {
     mkdir ${RELEASE_DIRECTORY_WINDOWS}
 
@@ -59,11 +41,9 @@ create_release_package_windows() {
 }
 
 create_release_packages() {
-    ./scripts/install_build_dependencies.sh
+    ./scripts/install_build_dependencies/install_build_dependencies.sh full
 
     make test
-
-    create_release_package_linux
 
     create_release_package_windows
 }
@@ -129,7 +109,6 @@ main() {
         error_exit "Assets URL is null. Does the release already exist?"
     fi
 
-    post_release_asset_to_github ${RELEASE_ZIP_LINUX}
     post_release_asset_to_github ${RELEASE_ZIP_WINDOWS}
 
     popd # ${ROGUE_FOREVER_BASE_PATH}
