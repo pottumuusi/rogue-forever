@@ -18,10 +18,13 @@ jobs:
       run: ./configure
       
     - name: Install build dependencies
-      run: ./scripts/install_build_dependencies/install_build_dependencies.sh linux
+      run: ./scripts/install_build_dependencies/install_build_dependencies.sh full
 
     - name: Build
       run: make
+
+    - name: Build for Windows
+      run: make windows
 
     - name: Test
       run: make test
