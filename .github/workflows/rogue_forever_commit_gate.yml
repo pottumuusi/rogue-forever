@@ -20,9 +20,6 @@ jobs:
     - name: Install build dependencies
       run: ./scripts/install_build_dependencies/install_build_dependencies.sh linux
 
-    - name: Install tools
-      run: ./scripts/install_tools.sh
-
     - name: Build
       run: make
 
