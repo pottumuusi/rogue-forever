@@ -150,7 +150,7 @@ include_config() {
         return
     fi
 
-    error_exit "Did not include any config"
+    error_exit "No config was set to be included"
 }
 
 install_cjson() {
