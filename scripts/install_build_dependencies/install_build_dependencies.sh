@@ -1,25 +1,12 @@
 #!/bin/bash
 
-# TODO consider using only absolute paths
-
 set -ex
-
-readonly INSTALL_SDL="TRUE"
-readonly INSTALL_SDL_IMAGE="TRUE"
-readonly INSTALL_GTEST="TRUE"
-readonly INSTALL_CMAKE="TRUE"
-readonly INSTALL_CPP_COMPILER="TRUE"
-readonly INSTALL_CJSON="TRUE"
-readonly INSTALL_WGET="TRUE"
-readonly INSTALL_GIT="TRUE"
-readonly INSTALL_UNZIP="TRUE"
-readonly INSTALL_MINGW_64="TRUE"
-readonly INSTALL_SDL_MINGW="TRUE"
-readonly INSTALL_SDL_IMAGE_MINGW="TRUE"
 
 cd $(dirname $0)
 
-readonly ROGUE_FOREVER_BASE_PATH="$(pushd .. &> /dev/null; pwd ; popd &> /dev/null)"
+readonly DEPENDENCIES_INSTALL_WORKAREA="/tmp/dependencies_install_workarea"
+readonly ROGUE_FOREVER_BASE_PATH="$(pushd ../../ &> /dev/null; pwd ; popd &> /dev/null)"
+readonly EXTERNAL_SDL_DEVEL_PATH="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel"
 
 error_exit() {
     echo "${1}"
@@ -27,52 +14,52 @@ error_exit() {
 }
 
 main() {
-    if [ ! -d "deps_install_workarea" ] ; then
-        mkdir deps_install_workarea
+    process_commandline_arguments "${@}"
+
+    include_config
+
+    if [ ! -d "${DEPENDENCIES_INSTALL_WORKAREA}" ] ; then
+        mkdir ${DEPENDENCIES_INSTALL_WORKAREA}
     fi
 
-    # TODO create workarea directory under /tmp
-    if [ ! -d "deps_install_workarea/sdl_devel" ] ; then
-        mkdir deps_install_workarea/sdl_devel
+    if [ ! -d "${DEPENDENCIES_INSTALL_WORKAREA}/sdl_devel" ] ; then
+        mkdir ${DEPENDENCIES_INSTALL_WORKAREA}/sdl_devel
     fi
 
     if [ ! -d "${ROGUE_FOREVER_BASE_PATH}/external" ] ; then
         mkdir ${ROGUE_FOREVER_BASE_PATH}/external
     fi
 
-    if [ ! -d "${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel" ] ; then
-        mkdir ${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel
+    if [ ! -d "${EXTERNAL_SDL_DEVEL_PATH}" ] ; then
+        mkdir ${EXTERNAL_SDL_DEVEL_PATH}
     fi
 
-    pushd deps_install_workarea
+    pushd ${DEPENDENCIES_INSTALL_WORKAREA}
+
+    echo "Running apt update. Many sudo commands may follow."
+    sudo apt update
 
     if [ "TRUE" == "${INSTALL_CMAKE}" ] ; then
-        sudo apt update
         sudo apt install -y cmake
     fi
 
     if [ "TRUE" == "${INSTALL_CPP_COMPILER}" ] ; then
-        sudo apt update
         sudo apt install -y g++
     fi
 
     if [ "TRUE" == "${INSTALL_WGET}" ] ; then
-        sudo apt update
         sudo apt install -y wget
     fi
 
     if [ "TRUE" == "${INSTALL_GIT}" ] ; then
-        sudo apt update
         sudo apt install -y git
     fi
 
     if [ "TRUE" == "${INSTALL_UNZIP}" ] ; then
-        sudo apt update
         sudo apt install -y unzip
     fi
 
     if [ "TRUE" == "${INSTALL_MINGW_64}" ] ; then
-        sudo apt update
         sudo apt install -y mingw-w64
     fi
 
@@ -108,19 +95,62 @@ main() {
         install_sdl_image_mingw
     fi
 
-    popd # deps_install_workarea
-
     if [ "TRUE" == "${INSTALL_CJSON}" ] ; then
         install_cjson
     fi
 
-    pushd ./deps_install_workarea
     if [ "TRUE" == "${INSTALL_GTEST}" ] ; then
-        ../install_gtest.sh
+        ${ROGUE_FOREVER_BASE_PATH}/scripts/install_gtest.sh
     fi
-    popd # ./deps_install_workarea
 
-    rm -rf ./deps_install_workarea
+    popd # ${DEPENDENCIES_INSTALL_WORKAREA}
+
+    rm -rf ${DEPENDENCIES_INSTALL_WORKAREA}
+}
+
+process_commandline_arguments() {
+    local -r config_selection="${1}"
+    local -r supported_config=(\
+        "linux" \
+        "full")
+    local -r include_variables=(\
+        "INCLUDE_CONFIG_LINUX" \
+        "INCLUDE_CONFIG_FULL")
+
+    local i=0
+
+    if [ "${#supported_config[@]}" != "${#include_variables[@]}" ] ; then
+        error_exit "Length of supported arguments does not equal the length of config variables"
+    fi
+
+    while [ ${i} -lt ${#supported_config[@]}  ] ; do
+        if [ "${config_selection}" == "${supported_config[${i}]}" ] ; then
+            readonly ${include_variables[${i}]}="TRUE"
+            return
+        fi
+
+        i=$(( ${i} + 1 ))
+    done
+
+    echo ""
+    echo "Unsupported command line arguments: ${@}"
+    echo "Please pass one of the following arguments to script $0: ${supported_config[@]}"
+    exit 1
+}
+
+include_config() {
+    if [ "TRUE" == "${INCLUDE_CONFIG_LINUX}" ] ; then
+        source ./config_common.sh
+        return
+    fi
+
+    if [ "TRUE" == "${INCLUDE_CONFIG_FULL}" ] ; then
+        source ./config_common.sh
+        source ./config_windows.sh
+        return
+    fi
+
+    error_exit "No config was set to be included"
 }
 
 install_cjson() {
@@ -161,10 +191,10 @@ install_cjson() {
 
 install_sdl_mingw() {
     local -r sdl2_mingw_zip="SDL2-devel-2.30.6-mingw.zip"
-    local -r destination_path_lib="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/SDL2-2.30.6/x86_64-w64-mingw32/"
-    local -r destination_path_include="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/combined/"
+    local -r destination_path_lib="${EXTERNAL_SDL_DEVEL_PATH}/SDL2-2.30.6/x86_64-w64-mingw32/"
+    local -r destination_path_include="${EXTERNAL_SDL_DEVEL_PATH}/combined/"
 
-    pushd ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+    pushd ${DEPENDENCIES_INSTALL_WORKAREA}/sdl_devel
 
     if [ ! -d "${destination_path_lib}" ] ; then
         mkdir -p ${destination_path_lib}
@@ -179,15 +209,15 @@ install_sdl_mingw() {
     cp --verbose -r SDL2-2.30.6/x86_64-w64-mingw32/lib/ ${destination_path_lib}
     cp --verbose -r SDL2-2.30.6/x86_64-w64-mingw32/include/ ${destination_path_include}
 
-    popd # ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+    popd # ${DEPENDENCIES_INSTALL_WORKAREA}/sdl_devel
 }
 
 install_sdl_image_mingw() {
     local -r sdl2_image_mingw_zip="SDL2_image-devel-2.8.2-mingw.zip"
-    local -r destination_path_lib="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/SDL2_image-2.8.2/x86_64-w64-mingw32/"
-    local -r destination_path_include="${ROGUE_FOREVER_BASE_PATH}/external/sdl_devel/combined/"
+    local -r destination_path_lib="${EXTERNAL_SDL_DEVEL_PATH}/SDL2_image-2.8.2/x86_64-w64-mingw32/"
+    local -r destination_path_include="${EXTERNAL_SDL_DEVEL_PATH}/combined/"
 
-    pushd ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+    pushd ${DEPENDENCIES_INSTALL_WORKAREA}/sdl_devel
 
     if [ ! -d "${destination_path_lib}" ] ; then
         mkdir -p ${destination_path_lib}
@@ -202,7 +232,7 @@ install_sdl_image_mingw() {
     cp --verbose -r SDL2_image-2.8.2/x86_64-w64-mingw32/lib/ ${destination_path_lib}
     cp --verbose -r SDL2_image-2.8.2/x86_64-w64-mingw32/include/ ${destination_path_include}
 
-    popd # ${ROGUE_FOREVER_BASE_PATH}/scripts/deps_install_workarea/sdl_devel
+    popd # ${DEPENDENCIES_INSTALL_WORKAREA}/sdl_devel
 }
 
-main
+main "${@}"

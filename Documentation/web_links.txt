@@ -1,2 +1,4 @@
 * GitHub REST API documentation
 	* https://docs.github.com/en/rest
+* Bash if reference
+	* https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html
