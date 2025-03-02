@@ -96,9 +96,13 @@ main() {
         error_exit "GH_TOKEN is empty. Please set a value for GH_TOKEN."
     fi
 
+    if [ -z "${RELEASE_TAG}" ] ; then
+        error_exit "RELEASE_TAG is empty. Please set a value for RELEASE_TAG."
+    fi
+
     pushd ${ROGUE_FOREVER_BASE_PATH}
 
-    echo -e "ABTEST RELEASE_TAG is: ${RELEASE_TAG}"
+    echo "Creating release: ${RELEASE_TAG}"
 
     install_prerequisites
 
