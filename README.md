@@ -1,5 +1,13 @@
 # rogue_forever
-A dungeon crawler
+A dungeon crawler game.
+
+Game currently consists of drawing a static image from a map representation file
+and a spritesheet. On top of this image, a player character placeholder is drawn
+to the coordinate 0, 0 in left upper corner. The map representation file and
+spritesheet were created using Tiled map editor.
+
+Tiled home page:
+https://www.mapeditor.org/
 
 ## How to install for playing the game
 
