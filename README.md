@@ -1,4 +1,4 @@
-# rogue_forever
+# Rogue Forever
 A dungeon crawler game.
 
 Game currently consists of drawing a static image from a map representation file
