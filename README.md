@@ -98,7 +98,7 @@ Open Powershell as administrator for running upcoming.
 
 Change current directory to the directory extracted from the zip.
 ```
-cd "$env:USERPROFILE\games\rogue-forever-windows-0.0.0" # For example
+cd "C:\Users\johndoe\games\rogue-forever-windows-0.0.0" # For example
 ```
 
 Query for the current execution policy. The result is used for restoring the
