@@ -60,11 +60,7 @@ EXE_NAME_SERVER_ROUTE_TEST_CLIENT := rogue_forever_server_route_test_client
 EXE_NAME_TEST := rogue_forever_test
 WINDOWS_DEPLOY_DST := /mnt/d/rogue_forever_deploy
 WINDOWS_DEPLOY_SRC := \
-			./assets \
-			./maps \
-			$(WINDOWS_EXE_NAME_GAME) \
-			./SDL2.dll \
-			./SDL2_image.dll
+			$(WINDOWS_EXE_NAME_GAME)
 
 ALL_EXE_NAMES := \
 		 $(EXE_NAME_GAME) \
