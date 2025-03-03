@@ -91,10 +91,10 @@ following instructions.
 Using a web browser, navigate to page:
 https://github.com/pottumuusi/rogue-forever/releases
 
-Download the Windows release zip to a directory you want to store the game in
+Download a Windows release zip to a directory where you want to store the game
 and extract the zip package.
 
-Open Powershell as administrator for running upcoming.
+Open Powershell as administrator for running upcoming commands.
 
 Change current directory to the directory extracted from the zip.
 ```
@@ -112,7 +112,7 @@ Allow running unsigned scripts.
 Set-ExecutionPolicy --ExecutionPolicy Unrestricted
 ```
 
-Retrieve runtime dependencies from the web by running .
+Retrieve runtime dependencies from the web by running script from release zip.
 ```
 .\install_runtime_dependencies_release.ps1
 ```
@@ -143,6 +143,9 @@ Clone the repository.
 sudo apt update && sudo apt upgrade && sudo apt autoremove
 ```
 ```
+ssh-keygen -t ed25519 # In case you have yet to generate SSH keypair
+```
+```
 sudo apt install git
 ```
 ```
@@ -169,7 +172,7 @@ Compile the main executable.
 make linux
 ```
 
-The game can then be started.
+The game can then be started for testing your changes.
 ```
 make linux_run
 ```
@@ -178,6 +181,9 @@ make linux_run
 Clone the repository.
 ```
 sudo apt update && sudo apt upgrade && sudo apt autoremove
+```
+```
+ssh-keygen -t ed25519 # In case you have yet to generate SSH keypair
 ```
 ```
 sudo apt install git
@@ -206,11 +212,12 @@ Compile the main executable.
 make windows
 ```
 
-The game executable `rogue_forever.exe` can then be started on a Windows host,
-where runtime dependencies have been installed. There is a script
-`scripts/install_runtime_dependencies_release.ps1` for installing the runtime
-dependencies for Windows. This script is packaged to the release zip of Windows.
-See Windows install instructions for an example on how to utilize the script.
+For testing your changes, the game executable `rogue_forever.exe` can then be
+started on a Windows host, where runtime dependencies have been installed. There
+is a script `scripts/install_runtime_dependencies_release.ps1` for installing
+the runtime dependencies for Windows. This script is packaged to the release zip
+of Windows.  See Windows install instructions for an example on how to utilize
+the script.
 
 A straightforward way for Windows development is to utilize Windows Subsystem
 for Linux (WSL). In WSL, perform the above development environment setup. Then
