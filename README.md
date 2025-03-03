@@ -178,6 +178,10 @@ make linux_run
 ```
 
 ### Developing for Windows
+A straightforward way for Windows development is to utilize Windows Subsystem
+for Linux (WSL). In WSL, perform the development environment setup as instructed
+next.
+
 Clone the repository.
 ```
 sudo apt update && sudo apt upgrade && sudo apt autoremove
@@ -215,12 +219,9 @@ make windows
 For testing your changes, the game executable `rogue_forever.exe` can then be
 started on a Windows host, where runtime dependencies have been installed. There
 is a script `scripts/install_runtime_dependencies_release.ps1` for installing
-the runtime dependencies for Windows. This script is packaged to the release zip
-of Windows.  See Windows install instructions for an example on how to utilize
-the script.
-
-A straightforward way for Windows development is to utilize Windows Subsystem
-for Linux (WSL). In WSL, perform the above development environment setup. Then
-to test the changes made to game, you can use `make` target `windows_deploy`.
-Before running `make` with `windows_deploy` target, please modify the deploy
-destination path in Makefile to suit your needs.
+the runtime dependencies for Windows. To move the built executable and mentioned
+script from WSL to a directory of hosting Windows, you can use `make` target
+`windows_deploy`. Before running `make` with `windows_deploy` target, please
+modify the deploy destination path in Makefile to suit your needs. See Windows
+install instructions for an example on how to utilize the runtime dependencies
+install script.
