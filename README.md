@@ -222,6 +222,6 @@ is a script `scripts/install_runtime_dependencies_release.ps1` for installing
 the runtime dependencies for Windows. To move the built executable and mentioned
 script from WSL to a directory of hosting Windows, you can use `make` target
 `windows_deploy`. Before running `make` with `windows_deploy` target, please
-modify the deploy destination path in Makefile to suit your needs. See Windows
+modify the deploy destination path in `Makefile` to suit your needs. See Windows
 install instructions for an example on how to utilize the runtime dependencies
 install script.
