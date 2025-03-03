@@ -200,3 +200,9 @@ where runtime dependencies have been installed. There is a script
 `scripts/install_runtime_dependencies_release.ps1` for installing the runtime
 dependencies for Windows. This script is packaged to the release zip of Windows.
 See Windows install instructions for an example on how to utilize the script.
+
+A straightforward way for Windows development is to utilize Windows Subsystem
+for Linux (WSL). In WSL, perform the above development environment setup. Then
+to test the changes made to game, you can use `make` target `windows_deploy`.
+Before running `make` with `windows_deploy` target, please modify the deploy
+destination path in Makefile to suit your needs.
