@@ -122,4 +122,81 @@ in case you have been using default execution policy.
 The game can now be started by running executable `rogue_forever.exe`.
 
 ## How to install for developing the game
-TODO write the instructions
+For developing the game, you can fork this repository and develop your copy
+further. The following instructions are written against the original
+repository.
+
+### Developing for Linux
+Clone the repository.
+```
+sudo apt update && sudo apt upgrade && sudo apt autoremove
+```
+```
+sudo apt install git
+```
+```
+git clone git@github.com:pottumuusi/rogue-forever.git
+```
+
+In the project base directory, install build dependencies.
+```
+./scripts/install_build_dependencies/install_build_dependencies.sh linux | tee output_install_build_dependencies.txt
+```
+
+Install runtime dependencies.
+```
+./scripts/install_runtime_dependencies_development.sh | tee output_install_runtime_dependencies_development.txt
+```
+
+Run the unit tests of project.
+```
+make test
+```
+
+Compile the main executable.
+```
+make linux
+```
+
+The game can then be started.
+```
+make linux_run
+```
+
+### Developing for Windows
+Clone the repository.
+```
+sudo apt update && sudo apt upgrade && sudo apt autoremove
+```
+```
+sudo apt install git
+```
+```
+git clone git@github.com:pottumuusi/rogue-forever.git
+```
+
+In the project base directory, install build dependencies.
+```
+./scripts/install_build_dependencies/install_build_dependencies.sh full | tee output_install_build_dependencies.txt
+```
+
+Install runtime dependencies.
+```
+./scripts/install_runtime_dependencies_development.sh | tee output_install_runtime_dependencies_development.txt
+```
+
+Run the unit tests of project.
+```
+make test
+```
+
+Compile the main executable.
+```
+make windows
+```
+
+The game executable `rogue_forever.exe` can then be started on a Windows host,
+where runtime dependencies have been installed. There is a script
+`scripts/install_runtime_dependencies_release.ps1` for installing the runtime
+dependencies for Windows. This script is packaged to the release zip of Windows.
+See Windows install instructions for an example on how to utilize the script.
