@@ -16,6 +16,9 @@ runtime dependencies, such as graphics assets and maps.
 
 Operating system specific installation instructions can be found below.
 
+* [Instaling on Debian Linux](#installing-on-debian-linux)
+* [Installing on Windows](#installing-on-windows)
+
 ### Installing on Linux variants
 Linux installation method is compiling the main executable from source and
 proceeding to retrieve runtime dependencies from the web, possibly
