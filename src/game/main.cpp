@@ -18,13 +18,14 @@ using screen_tiles = std::array<std::array<Tile*, g_constants::TILES_HORIZONTAL>
 using screen_tiles_layers = std::vector<screen_tiles>;
 using texture_pool = std::array<SDL_Texture*, g_constants::TEXTURE_POOL_SIZE>;
 
+extern struct InterfaceSdlw Sdlw;
+
 #if 0
 void mainLoop(void) {
 }
 #endif
 
 void renderTile(
-        Sdlw& sdlw,
         Tile* tile,
         int screenX,
         int screenY)
@@ -48,7 +49,7 @@ void renderTile(
     Log::d(msg);
 #endif
 
-    sdlw.renderCopy(tile->getSheetTexture(), &srcRect, &dstRect);
+    Sdlw.render_copy(tile->getSheetTexture(), &srcRect, &dstRect);
 }
 
 void fillScreenTiles(
@@ -128,7 +129,6 @@ void fillScreenTiles(
 }
 
 void renderScreenTiles(
-        Sdlw& sdlw,
         const screen_tiles& screenTiles)
 {
     for (size_t screenY = 0; screenY < screenTiles.size(); screenY++) {
@@ -138,7 +138,6 @@ void renderScreenTiles(
             }
 
             renderTile(
-                    sdlw,
                     screenTiles[screenY][screenX],
                     screenX * g_constants::TILE_WIDTH,
                     screenY * g_constants::TILE_HEIGHT);
@@ -147,20 +146,18 @@ void renderScreenTiles(
 }
 
 void renderScreenTilesLayers(
-        Sdlw& sdlw,
         const screen_tiles_layers& screenTilesLayers)
 {
     for (const screen_tiles& screenTiles : screenTilesLayers) {
-        renderScreenTiles(sdlw, screenTiles);
+        renderScreenTiles(screenTiles);
     }
 }
 
-void render_player(Sdlw& sdlw, tile_pool& tile_pool_player)
+void render_player(tile_pool& tile_pool_player)
 {
     // 0 is used for empty .tmj layer data items. Render the first tile,
     // whose id is 1.
     renderTile(
-        sdlw,
         &(tile_pool_player[1]),
         0,
         0);
@@ -224,6 +221,7 @@ static void
 construct_interfaces(void)
 {
     constructInterfaceJson();
+    constructInterfaceSdlw();
 }
 
 void game(void)
@@ -234,8 +232,6 @@ void game(void)
     int cameraX = g_constants::TILES_HORIZONTAL / 2;
 
     bool quitEventReceived = false;
-
-    Sdlw& sdlw = Sdlw::getReference();
 
     SDL_Event event;
 
@@ -264,7 +260,7 @@ void game(void)
 
     Log::i("Initializing rendering");
     try {
-        Sdlw::initRendering();
+        Sdlw.init_rendering();
     } catch(std::exception& e) {
         std::cerr << "Exception while initializing rendering: " << e.what();
         throw e;
@@ -304,7 +300,7 @@ void game(void)
             }
         } while (0 != ret);
 
-        sdlw.renderClear();
+        Sdlw.render_clear();
 
         fillScreenTiles(tile_pool_map,
 			currentMap,
@@ -316,10 +312,10 @@ void game(void)
         printScreenTilesLayers(screenTilesLayers);
 #endif
 
-        renderScreenTilesLayers(sdlw, screenTilesLayers);
-        render_player(sdlw, tile_pool_player);
+        renderScreenTilesLayers(screenTilesLayers);
+        render_player(tile_pool_player);
 
-        sdlw.renderPresent();
+        Sdlw.render_present();
 
         if (g_constants::DEBUG_FRAME_STEPPING) {
             std::string readHere = "";
@@ -331,7 +327,7 @@ void game(void)
     mainLoop();
 #endif
 
-    sdlw.destroy();
+    Sdlw.destroy();
 }
 
 // Disable name mangling so that SDL can find and redefine main.

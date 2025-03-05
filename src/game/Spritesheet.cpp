@@ -7,6 +7,7 @@
 #include "Spritesheet.hpp"
 
 extern struct InterfaceJson Json;
+extern struct InterfaceSdlw Sdlw;
 
 const std::string Spritesheet::spritesheet_name_player = "player-collection-spritesheet";
 
@@ -89,9 +90,7 @@ void Spritesheet::set_tiled_firstgid(int new_tiled_firstgid)
 
 void Spritesheet::load_texture(std::string pathImage)
 {
-    Sdlw& sdlw = Sdlw::getReference();
-
-    texture = sdlw.imgLoadTextureShared(pathImage);
+    texture = Sdlw.img_load_texture_shared(pathImage);
     if (NULL == texture) {
         throw std::runtime_error("Failed to load texture: " + pathImage);
     }

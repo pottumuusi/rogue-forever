@@ -1,3 +1,7 @@
+/*
+ * Sdlw is a wrapper around SDL library.
+ */
+
 #ifndef SDLW_HPP_DEFINED
 #define SDLW_HPP_DEFINED
 
@@ -13,51 +17,36 @@
 #include <memory>
 #include <string>
 
-class Sdlw {
-public:
-    Sdlw(const Sdlw& other) = delete;
-    Sdlw& operator=(const Sdlw& other) = delete;
-    Sdlw(Sdlw&& other) = delete;
-    Sdlw& operator=(Sdlw&& other) = delete;
-
-    ~Sdlw();
-
-    void init(std::uint32_t flags);
-    void setHint(std::string name, std::string value);
-    void imgInit(int flags);
-    void createMainWindow(
+struct InterfaceSdlw {
+    void (*moduleCleanupSdlw) (void);
+    void (*init) (std::uint32_t flags);
+    void (*set_hint) (std::string name, std::string value);
+    void (*img_init) (int flags);
+    void (*create_main_window) (
             std::string title,
             int x,
             int y,
             int w,
             int h,
             std::uint32_t flags);
-    void createMainRenderer(int index, std::uint32_t flags);
-    void setRenderDrawColor(
+    void (*create_main_renderer) (int index, std::uint32_t flags);
+    void (*set_render_draw_color) (
             std::uint8_t r,
             std::uint8_t g,
             std::uint8_t b,
             std::uint8_t a);
-    void destroy(void);
-    void renderClear(void);
-    void renderPresent(void);
-    int renderCopy(
+    void (*destroy) (void); // TODO figure out if destroy() is redundant with moduleCleanupSdlw()
+    void (*render_clear) (void);
+    void (*render_present) (void);
+    int (*render_copy) (
             std::shared_ptr<SDL_Texture> texture,
             const SDL_Rect* srcrect,
             const SDL_Rect* dstrect);
-    std::shared_ptr<SDL_Texture> imgLoadTextureShared(std::string file);
-    void destroyTexture(std::shared_ptr<SDL_Texture> texture);
-
-    static Sdlw& getReference(void);
-    static void initRendering(void);
-
-private:
-    Sdlw() = default;
-
-    static Sdlw sharedInstance;
-
-    SDL_Window* mainWindow;
-    SDL_Renderer* mainRenderer;
+    std::shared_ptr<SDL_Texture> (*img_load_texture_shared) (std::string file);
+    void (*destroy_texture) (std::shared_ptr<SDL_Texture> texture);
+    void (*init_rendering) (void);
 };
+
+void constructInterfaceSdlw(void);
 
 #endif // SDLW_HPP_DEFINED
