@@ -2,11 +2,14 @@
 
 #include "Json.hpp"
 
+extern struct InterfaceJson Json;
+
 class TestJson : public ::testing::Test
 {
 protected:
     void SetUp() override
     {
+        constructInterfaceJson();
     }
 
     void TearDown() override
@@ -19,7 +22,7 @@ TEST_F(TestJson, ParseJsonFromFile)
     const std::string file_path = "test_data/map2_16x16_redone.tmj";
     cJSON* json = NULL;
 
-    json = Json::readFromFile(file_path);
+    json = Json.read_from_file(file_path);
 
     EXPECT_NE(json, nullptr);
 }
@@ -34,7 +37,7 @@ TEST_F(TestJson, ReadMapTileHeightIsNumber)
     json = NULL;
     json_tile_height = NULL;
 
-    json = Json::readFromFile(file_path);
+    json = Json.read_from_file(file_path);
     json_tile_height = cJSON_GetObjectItemCaseSensitive(json, "tileheight");
 
     EXPECT_EQ(1, cJSON_IsNumber(json_tile_height));
@@ -53,7 +56,7 @@ TEST_F(TestJson, ReadMapTileHeight)
     json_tile_height = NULL;
     tile_height = -1;
 
-    json = Json::readFromFile(file_path);
+    json = Json.read_from_file(file_path);
     json_tile_height = cJSON_GetObjectItemCaseSensitive(json, "tileheight");
     tile_height = json_tile_height->valueint;
 

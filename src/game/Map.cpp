@@ -1,6 +1,8 @@
 #include "Log.hpp"
 #include "Map.hpp"
 
+extern struct InterfaceJson Json;
+
 Map::Map(std::string path)
 {
     loadJson(path);
@@ -8,7 +10,7 @@ Map::Map(std::string path)
 
 void Map::loadJson(std::string path)
 {
-    mapTmj = Json::readFromFile(path);
+    mapTmj = Json.read_from_file(path);
 }
 
 cJSON* Map::getTmj(void)

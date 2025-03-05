@@ -5,12 +5,11 @@
 
 #include <string>
 
-class Json
-{
-public:
-    static cJSON* readFromFile(std::string filename);
-
-private:
+struct InterfaceJson {
+    void (*moduleCleanupJson) (void);
+    cJSON* (*read_from_file) (std::string file_path);
 };
+
+void constructInterfaceJson(void);
 
 #endif // JSON_HPP_DEFINED

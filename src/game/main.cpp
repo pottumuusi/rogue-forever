@@ -220,6 +220,12 @@ void printConstructedSpritesheets(const spritesheet_pool& spritesheetPool)
 }
 #endif
 
+static void
+construct_interfaces(void)
+{
+    constructInterfaceJson();
+}
+
 void game(void)
 {
     int ret = -1;
@@ -246,6 +252,8 @@ void game(void)
     (void) texturePool;
 
     spritesheet_player = {};
+
+    construct_interfaces();
 
     // TODO check file existence
 

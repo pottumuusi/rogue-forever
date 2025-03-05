@@ -6,7 +6,26 @@
 #include "Json.hpp"
 #include "Log.hpp"
 
-cJSON* Json::readFromFile(std::string file_path)
+static void moduleCleanupJson(void);
+static cJSON* read_from_file(std::string file_path);
+
+struct InterfaceJson Json = {0};
+
+void
+constructInterfaceJson(void)
+{
+    Json.moduleCleanupJson = moduleCleanupJson;
+    Json.read_from_file = read_from_file;
+}
+
+static void
+moduleCleanupJson(void)
+{
+    throw std::runtime_error("Json.moduleCleanupJson is not yet implemented");
+}
+
+static cJSON*
+read_from_file(std::string file_path)
 {
     const int bytes = 1;
     const char* cjson_error_ptr;

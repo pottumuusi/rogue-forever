@@ -7,6 +7,7 @@ class TestMap : public ::testing::Test
 protected:
     void SetUp() override
     {
+        constructInterfaceJson();
     }
 
     void TearDown() override

@@ -6,6 +6,8 @@
 #include "Sdlw.hpp"
 #include "Spritesheet.hpp"
 
+extern struct InterfaceJson Json;
+
 const std::string Spritesheet::spritesheet_name_player = "player-collection-spritesheet";
 
 const std::array<std::string, SPRITESHEET_POOL_SIZE> Spritesheet::spritesheet_names = {
@@ -97,7 +99,7 @@ void Spritesheet::load_texture(std::string pathImage)
 
 void Spritesheet::load_json(std::string pathJson)
 {
-    json_spritesheet = Json::readFromFile(pathJson);
+    json_spritesheet = Json.read_from_file(pathJson);
 }
 
 void Spritesheet::fetch_firstgid(Map& map)
