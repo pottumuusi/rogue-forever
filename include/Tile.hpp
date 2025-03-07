@@ -16,11 +16,21 @@
 #include "Constants.hpp"
 #include "Spritesheet.hpp"
 
+struct Tile {
+    struct Tile* this_instance;
+
+    // How private variables can be hidden? Could constructor set
+    // static variables?
+};
+
+void constructTile(void);
+
 class Tile;
 
 using tile_pool = std::unordered_map<int, Tile>;
 using tile_id_map = std::array<std::string, g_constants::TILE_AMOUNT>;
 
+#if 0
 class Tile {
 public:
     Tile() = default;
@@ -65,5 +75,6 @@ private:
     int tiledGid;
     int tiledId;
 };
+#endif
 
 #endif
