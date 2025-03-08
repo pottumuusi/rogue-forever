@@ -109,7 +109,7 @@ Get-ExecutionPolicy
 
 Allow running unsigned scripts.
 ```
-Set-ExecutionPolicy --ExecutionPolicy Unrestricted
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 ```
 
 Retrieve runtime dependencies from the web by running script from release zip.
@@ -121,12 +121,12 @@ consult the warning message for allowing running the script.
 
 To restore execution policy, please run
 ```
-Set-ExecutionPolicy --ExecutionPolicy <original_policy>
+Set-ExecutionPolicy -ExecutionPolicy <original_policy>
 ```
 replacing '<original_policy>' with the policy which was queried earlier in the
 instructions. You can alternatively use
 ```
-Set-ExecutionPolicy --ExecutionPolicy Default
+Set-ExecutionPolicy -ExecutionPolicy Default
 ```
 in case you have been using default execution policy.
 
