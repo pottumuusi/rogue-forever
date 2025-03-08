@@ -124,7 +124,7 @@ To restore execution policy, please run
 Set-ExecutionPolicy -ExecutionPolicy <original_policy>
 ```
 replacing '<original_policy>' with the policy which was queried earlier in the
-instructions. You can alternatively use
+instructions with `Get-ExecutionPolicy`. You can alternatively use
 ```
 Set-ExecutionPolicy -ExecutionPolicy Default
 ```
