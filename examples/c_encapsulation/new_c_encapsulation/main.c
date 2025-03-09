@@ -42,7 +42,7 @@
  * memory. How much should be allocated?
  */
 
-#include "module.h"
+#include "demo.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -70,7 +70,7 @@ int main(void)
 
     printf("After calling add_to_foo, result is: %d\n", result);
 
-    destroyModule(object_test);
+    destroyDemo(object_test);
 
     return 0;
 }
