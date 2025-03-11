@@ -6,15 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int add_to_foo(struct DemoPublic* object_public, int operand);
+static int add_to_foo(struct Demo* object_public, int operand);
 static int add_to_foo_internal(int operand);
 
-static void load_function_context(struct DemoPublic* new_this);
+static void load_function_context(struct Demo* new_this);
 
 MODULE_GENERATE_FUNCTION_CONTEXT_DECLARATIONS
 
 // Function context begin
-static struct DemoPublic* this;
+static struct Demo* this;
 static struct DemoPrivate* this_private;
 // Function context end
 
@@ -26,16 +26,16 @@ loadInterfaceDemo(void)
     Demo.add_to_foo = add_to_foo;
 }
 
-struct DemoPublic*
+struct Demo*
 constructDemoHeap(int _foo)
 {
-    struct Demo* object_full;
-    struct DemoPublic* object_public;
+    struct DemoFull* object_full;
+    struct Demo* object_public;
     struct DemoPrivate* object_private;
 
     object_full = NULL;
 
-    object_full = calloc(1, sizeof(struct Demo));
+    object_full = calloc(1, sizeof(struct DemoFull));
     if (NULL == object_full) {
         fprintf(stderr, "Failed to allocate memory for full object\n");
         return NULL;
@@ -62,16 +62,16 @@ constructDemoHeap(int _foo)
 }
 
 void
-destroyDemo(struct DemoPublic* demo_to_destroy_public)
+destroyDemo(struct Demo* demo_to_destroy_public)
 {
-    struct Demo* demo_to_destroy =
-        (struct Demo*) demo_to_destroy_public;
+    struct DemoFull* demo_to_destroy =
+        (struct DemoFull*) demo_to_destroy_public;
 
     free(demo_to_destroy);
 }
 
 static void
-load_function_context(struct DemoPublic* new_this)
+load_function_context(struct Demo* new_this)
 {
     if (NULL != this || NULL != this_private) {
         fprintf(stderr, "Previous context has not been unloaded. Please report this bug.");
@@ -79,7 +79,7 @@ load_function_context(struct DemoPublic* new_this)
     }
 
     this = new_this;
-    this_private = &(((struct Demo*) new_this)->private);
+    this_private = &(((struct DemoFull*) new_this)->private);
 }
 
 MODULE_GENERATE_UNLOAD_FUNCTION_CONTEXT
@@ -87,7 +87,7 @@ MODULE_GENERATE_UNLOAD_FUNCTION_CONTEXT
 MODULE_GENERATE_VALIDATE_FUNCTION_CONTEXT
 
 static int
-add_to_foo(struct DemoPublic* object_public, int operand)
+add_to_foo(struct Demo* object_public, int operand)
 {
     int result = 0;
 

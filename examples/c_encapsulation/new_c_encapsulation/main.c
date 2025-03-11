@@ -68,7 +68,7 @@
  * passed in some other way, such as static global variable. And here the
  * information hiding comes into play. Private data of the instance is made
  * easily accessible in the internal function. When private data is implemented
- * as a field of Demo and DemoPublic is returned from the constructor, it is
+ * as a field of DemoFull and Demo is returned from the constructor, it is
  * possible to access private data outside the module. Accessing private data
  * outside its module is against design principles. I deem this private data
  * hiding to be sufficient to prevent accidental use outside their modules.
@@ -96,7 +96,7 @@ extern struct DemoInterface Demo;
 
 int main(void)
 {
-    struct DemoPublic* object_module;
+    struct Demo* object_module;
 
     int result;
 
