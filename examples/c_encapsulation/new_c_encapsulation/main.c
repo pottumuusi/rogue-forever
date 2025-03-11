@@ -103,22 +103,6 @@ int main(void)
     result = 0;
     object_module = NULL;
 
-#if 0
-    object_test = constructModule(2);
-    if (NULL == object_test) {
-        fprintf(stderr, "Failed to construct module");
-        return 1;
-    }
-
-    object_test->load_function_context(object_test);
-    result = object_test->add_to_foo(22);
-    object_test->unload_function_context();
-
-    printf("After calling add_to_foo, result is: %d\n", result);
-
-    destroyModule(object_test);
-    object_test = NULL;
-#endif
     loadInterfaceModule();
 
     object_module = constructModuleV2Heap(4);
