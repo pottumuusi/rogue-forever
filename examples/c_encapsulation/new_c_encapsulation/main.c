@@ -88,17 +88,22 @@
 #include <stddef.h>
 #include <stdio.h>
 
-// Define DEBUG to be 1 in compiler flags for enabling debug features.
+// Define:
+// * DEBUG to be 1 in compiler flags for enabling debug features.
+// * INVALID_ACCESS_TO_PRIVATE_DATA to be 1 for producing a compilation error.
+
+extern struct ModuleInterface Module;
 
 int main(void)
 {
-    struct ModulePublic* object_test;
+    struct ModulePublic* object_module;
 
     int result;
 
     result = 0;
-    object_test = NULL;
+    object_module = NULL;
 
+#if 0
     object_test = constructModule(2);
     if (NULL == object_test) {
         fprintf(stderr, "Failed to construct module");
@@ -113,15 +118,20 @@ int main(void)
 
     destroyModule(object_test);
     object_test = NULL;
+#endif
+    loadInterfaceModule();
 
-    printf("\nRunning V2 object operations.\n");
-    object_test = constructModuleV2(4);
+    object_module = constructModuleV2Heap(4);
 
-    result = object_test->add_to_fooV2(44);
+    result = Module.add_to_fooV2(object_module, 44);
     printf("After calling add_to_foo, result is: %d\n", result);
 
-    destroyModuleV2(object_test);
-    object_test = NULL;
+#if INVALID_ACCESS_TO_PRIVATE_DATA
+    printf("object_module->foo is: %d", object_module->foo);
+#endif
+
+    destroyModuleV2(object_module);
+    object_module = NULL;
 
     return 0;
 }

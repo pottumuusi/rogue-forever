@@ -8,6 +8,8 @@
 #define OBJECTS_SIZE 8
 
 static int add_to_foo(int operand);
+static int add_to_fooV2(struct ModulePublic* object_public, int operand);
+static int add_to_fooV2_internal(int operand);
 static int append_to_public_objects(void* new_module);
 static int append_to_private_objects(void* new_module);
 static int insert_to_objects(void* new_module, int insert_index, void** objects_array);
@@ -17,24 +19,35 @@ static void load_function_context(struct ModulePublic* new_this);
 static void unload_function_context(void);
 static void validate_function_context(void);
 
-static struct ModulePublic* objects_public[OBJECTS_SIZE] = {0};
-static struct ModulePrivate* objects_private[OBJECTS_SIZE] = {0};
+// Default initializer for static storage class is zero.
+// https://en.wikipedia.org/wiki/C_syntax#Storage_class_specifiers
+static struct ModulePublic* objects_public[OBJECTS_SIZE];
+static struct ModulePrivate* objects_private[OBJECTS_SIZE];
 
 // Function context begin
 static struct ModulePublic* this;
 static struct ModulePrivate* this_private;
 // Function context end
 
-struct ModulePublic*
-constructModuleV2(int _foo)
+struct ModuleInterface Module;
+
+void
+loadInterfaceModule(void)
 {
-    struct ModuleFull* object_full;
+    Module.add_to_foo = add_to_foo;
+    Module.add_to_fooV2 = add_to_fooV2;
+}
+
+struct ModulePublic*
+constructModuleV2Heap(int _foo)
+{
+    struct Module* object_full;
     struct ModulePublic* object_public;
     struct ModulePrivate* object_private;
 
     object_full = NULL;
 
-    object_full = calloc(1, sizeof(struct ModuleFull));
+    object_full = calloc(1, sizeof(struct Module));
     if (NULL == object_full) {
         fprintf(stderr, "Failed to allocate memory for full object\n");
         return NULL;
@@ -43,21 +56,17 @@ constructModuleV2(int _foo)
     object_public = &(object_full->public);
     object_private = &(object_full->private);
 
-    object_public->this_instance = object_public;
-    object_public->load_function_context = load_function_context;
-    object_public->unload_function_context = unload_function_context;
-    object_public->add_to_foo = add_to_foo;
-    object_public->add_to_fooV2 = add_to_fooV2;
-
+    (void) object_public; // Here would initialize public data
     object_private->foo = _foo;
 
-    printf("constructModuleV2, object_full is: %p\n", object_full);
-    printf("constructModuleV2, object_public is: %p\n", object_public);
-    printf("constructModuleV2, object_private is: %p\n", object_private);
+    printf("constructModuleV2Heap, object_full is: %p\n", object_full);
+    printf("constructModuleV2Heap, object_public is: %p\n", object_public);
+    printf("constructModuleV2Heap, object_private is: %p\n", object_private);
 
     if ((void*) object_full != (void*) object_public) {
         fprintf(stderr, "Unexpected memory address for public field of module\n");
         free(object_full);
+        object_full = NULL;
         return NULL;
     }
 
@@ -67,12 +76,13 @@ constructModuleV2(int _foo)
 void
 destroyModuleV2(struct ModulePublic* module_to_destroy_public)
 {
-    struct ModuleFull* module_to_destroy =
-        (struct ModuleFull*) module_to_destroy_public;
+    struct Module* module_to_destroy =
+        (struct Module*) module_to_destroy_public;
 
     free(module_to_destroy);
 }
 
+#if 0
 struct ModulePublic* constructModule(int _foo)
 {
     int ret;
@@ -131,6 +141,7 @@ struct ModulePublic* constructModule(int _foo)
 
     return object_public;
 }
+#endif
 
 void destroyModule(struct ModulePublic* module_to_destroy)
 {
@@ -150,6 +161,7 @@ void destroyModule(struct ModulePublic* module_to_destroy)
 #endif // DEBUG
 }
 
+#if 0
 static struct ModulePrivate*
 find_matching_private_object(struct ModulePublic const * const public_object)
 {
@@ -167,7 +179,9 @@ find_matching_private_object(struct ModulePublic const * const public_object)
     fprintf(stderr, "Failed to find private object matching a public object. Please report this bug.");
     exit(1);
 }
+#endif
 
+#if 0
 static void
 load_function_context(struct ModulePublic* new_this)
 {
@@ -179,6 +193,20 @@ load_function_context(struct ModulePublic* new_this)
 
     this = new_this;
     this_private = find_matching_private_object(this);
+}
+#endif
+
+static void
+load_function_contextV2(struct ModulePublic* new_this)
+{
+    if (NULL != this || NULL != this_private) {
+        // TODO dump information which may help in debugging
+        fprintf(stderr, "Previous context has not been unloaded. Please report this bug.");
+        exit(1);
+    }
+
+    this = new_this;
+    this_private = &(((struct Module*) new_this)->private);
 }
 
 static void
@@ -277,8 +305,7 @@ add_to_fooV2(struct ModulePublic* object_public, int operand)
 {
     int result = 0;
 
-    this = object_public;
-    this_private = &(((struct ModuleFull*) object_public)->private);
+    load_function_contextV2(object_public);
 
     result = add_to_fooV2_internal(operand);
 
