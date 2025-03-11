@@ -1,5 +1,5 @@
-#ifndef MODULE_H_DEFINED
-#define MODULE_H_DEFINED
+#ifndef DEMO_H_DEFINED
+#define DEMO_H_DEFINED
 
 struct DemoPublic {
 };
@@ -26,4 +26,4 @@ struct DemoPublic* constructDemoV2Heap(int _foo);
 
 void destroyDemoV2(struct DemoPublic* demo_to_destroy_public);
 
-#endif // MODULE_H_DEFINED
+#endif // DEMO_H_DEFINED
