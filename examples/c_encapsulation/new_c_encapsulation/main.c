@@ -83,6 +83,8 @@
  * https://en.wikipedia.org/wiki/C_syntax#Storage_class_specifiers
  */
 
+// TODO rename to Demo and revise the end of text
+
 #include "module.h"
 
 #include <stddef.h>
