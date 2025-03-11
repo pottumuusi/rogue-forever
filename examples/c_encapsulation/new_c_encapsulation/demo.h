@@ -14,16 +14,15 @@ struct Demo {
 };
 
 struct DemoInterface {
-    int (*add_to_foo) (int operand);
-    int (*add_to_fooV2) (
+    int (*add_to_foo) (
         struct DemoPublic* object_public,
         int operand);
 };
 
 void loadInterfaceDemo(void);
 
-struct DemoPublic* constructDemoV2Heap(int _foo);
+struct DemoPublic* constructDemoHeap(int _foo);
 
-void destroyDemoV2(struct DemoPublic* demo_to_destroy_public);
+void destroyDemo(struct DemoPublic* demo_to_destroy_public);
 
 #endif // DEMO_H_DEFINED

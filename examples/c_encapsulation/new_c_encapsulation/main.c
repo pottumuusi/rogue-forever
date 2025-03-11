@@ -105,16 +105,16 @@ int main(void)
 
     loadInterfaceDemo();
 
-    object_module = constructDemoV2Heap(4);
+    object_module = constructDemoHeap(4);
 
-    result = Demo.add_to_fooV2(object_module, 44);
+    result = Demo.add_to_foo(object_module, 44);
     printf("After calling add_to_foo, result is: %d\n", result);
 
 #if INVALID_ACCESS_TO_PRIVATE_DATA
     printf("object_module->foo is: %d", object_module->foo);
 #endif
 
-    destroyDemoV2(object_module);
+    destroyDemo(object_module);
     object_module = NULL;
 
     return 0;

@@ -6,10 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int add_to_fooV2(struct DemoPublic* object_public, int operand);
-static int add_to_fooV2_internal(int operand);
+static int add_to_foo(struct DemoPublic* object_public, int operand);
+static int add_to_foo_internal(int operand);
 
-static void load_function_contextV2(struct DemoPublic* new_this);
+static void load_function_context(struct DemoPublic* new_this);
 
 MODULE_GENERATE_FUNCTION_CONTEXT_DECLARATIONS
 
@@ -23,11 +23,11 @@ struct DemoInterface Demo;
 void
 loadInterfaceDemo(void)
 {
-    Demo.add_to_fooV2 = add_to_fooV2;
+    Demo.add_to_foo = add_to_foo;
 }
 
 struct DemoPublic*
-constructDemoV2Heap(int _foo)
+constructDemoHeap(int _foo)
 {
     struct Demo* object_full;
     struct DemoPublic* object_public;
@@ -47,9 +47,9 @@ constructDemoV2Heap(int _foo)
     (void) object_public; // Here would initialize public data
     object_private->foo = _foo;
 
-    printf("constructDemoV2Heap, object_full is: %p\n", object_full);
-    printf("constructDemoV2Heap, object_public is: %p\n", object_public);
-    printf("constructDemoV2Heap, object_private is: %p\n", object_private);
+    printf("constructDemoHeap, object_full is: %p\n", object_full);
+    printf("constructDemoHeap, object_public is: %p\n", object_public);
+    printf("constructDemoHeap, object_private is: %p\n", object_private);
 
     if ((void*) object_full != (void*) object_public) {
         fprintf(stderr, "Unexpected memory address for public field of module\n");
@@ -62,7 +62,7 @@ constructDemoV2Heap(int _foo)
 }
 
 void
-destroyDemoV2(struct DemoPublic* demo_to_destroy_public)
+destroyDemo(struct DemoPublic* demo_to_destroy_public)
 {
     struct Demo* demo_to_destroy =
         (struct Demo*) demo_to_destroy_public;
@@ -71,7 +71,7 @@ destroyDemoV2(struct DemoPublic* demo_to_destroy_public)
 }
 
 static void
-load_function_contextV2(struct DemoPublic* new_this)
+load_function_context(struct DemoPublic* new_this)
 {
     if (NULL != this || NULL != this_private) {
         fprintf(stderr, "Previous context has not been unloaded. Please report this bug.");
@@ -87,13 +87,13 @@ MODULE_GENERATE_UNLOAD_FUNCTION_CONTEXT
 MODULE_GENERATE_VALIDATE_FUNCTION_CONTEXT
 
 static int
-add_to_fooV2(struct DemoPublic* object_public, int operand)
+add_to_foo(struct DemoPublic* object_public, int operand)
 {
     int result = 0;
 
-    load_function_contextV2(object_public);
+    load_function_context(object_public);
 
-    result = add_to_fooV2_internal(operand);
+    result = add_to_foo_internal(operand);
 
     unload_function_context();
 
@@ -101,7 +101,7 @@ add_to_fooV2(struct DemoPublic* object_public, int operand)
 }
 
 static int
-add_to_fooV2_internal(int operand)
+add_to_foo_internal(int operand)
 {
     validate_function_context();
 
