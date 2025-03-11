@@ -1,4 +1,5 @@
 #include "demo.h"
+#include "module.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -9,8 +10,8 @@ static int add_to_fooV2(struct DemoPublic* object_public, int operand);
 static int add_to_fooV2_internal(int operand);
 
 static void load_function_contextV2(struct DemoPublic* new_this);
-static void unload_function_context(void);
-static void validate_function_context(void);
+
+MODULE_GENERATE_FUNCTION_CONTEXT_DECLARATIONS
 
 // Function context begin
 static struct DemoPublic* this;
@@ -81,21 +82,9 @@ load_function_contextV2(struct DemoPublic* new_this)
     this_private = &(((struct Demo*) new_this)->private);
 }
 
-static void
-unload_function_context(void)
-{
-    this = NULL;
-    this_private = NULL;
-}
+MODULE_GENERATE_UNLOAD_FUNCTION_CONTEXT
 
-// TODO check if validate_function_context can be swiftly moved to module.c
-// when this file has been renamed to demo.c.
-static void
-validate_function_context(void)
-{
-    assert(NULL != this);
-    assert(NULL != this_private);
-}
+MODULE_GENERATE_VALIDATE_FUNCTION_CONTEXT
 
 static int
 add_to_fooV2(struct DemoPublic* object_public, int operand)
