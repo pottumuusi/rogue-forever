@@ -46,13 +46,15 @@
  * is devoid of the struct.
  *
  * A simple solution is to have public functions in modules. The idea of always
- * exposing functions via fields of struct is to be scrapped. The module
- * containing a function can be detected from the struct passed as an argument.
- * The struct argument also protects from identical function signatures in
- * two different modules. A policy for designing is to always pass struct
- * pointer pointing to module data to a module function. If the function
- * does not need module data, then the function does not belong to the module.
- * This applies to modules which are instantiated more than once.
+ * exposing functions via fields of struct is to be scrapped (nope, later
+ * decided to stick with functions in struct, but there is a single interface
+ * struct instead of having the function pointers in every instance of a
+ * module). The module containing a function can be detected from the struct
+ * passed as an argument. The struct argument also protects from identical
+ * function signatures in two different modules. A policy for designing is to
+ * always pass struct pointer pointing to module data to a module function. If
+ * the function does not need module data, then the function does not belong to
+ * the module. This applies to modules which are instantiated more than once.
  *
  * It would seem to align with C design to separate the interface and data from
  * each other. So to provide functions which take module instances as
