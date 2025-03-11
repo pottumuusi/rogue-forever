@@ -1,40 +1,40 @@
-#include "module.h"
+#include "demo.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-static int add_to_fooV2(struct ModulePublic* object_public, int operand);
+static int add_to_fooV2(struct DemoPublic* object_public, int operand);
 static int add_to_fooV2_internal(int operand);
 
-static void load_function_contextV2(struct ModulePublic* new_this);
+static void load_function_contextV2(struct DemoPublic* new_this);
 static void unload_function_context(void);
 static void validate_function_context(void);
 
 // Function context begin
-static struct ModulePublic* this;
-static struct ModulePrivate* this_private;
+static struct DemoPublic* this;
+static struct DemoPrivate* this_private;
 // Function context end
 
-struct ModuleInterface Module;
+struct DemoInterface Demo;
 
 void
-loadInterfaceModule(void)
+loadInterfaceDemo(void)
 {
-    Module.add_to_fooV2 = add_to_fooV2;
+    Demo.add_to_fooV2 = add_to_fooV2;
 }
 
-struct ModulePublic*
-constructModuleV2Heap(int _foo)
+struct DemoPublic*
+constructDemoV2Heap(int _foo)
 {
-    struct Module* object_full;
-    struct ModulePublic* object_public;
-    struct ModulePrivate* object_private;
+    struct Demo* object_full;
+    struct DemoPublic* object_public;
+    struct DemoPrivate* object_private;
 
     object_full = NULL;
 
-    object_full = calloc(1, sizeof(struct Module));
+    object_full = calloc(1, sizeof(struct Demo));
     if (NULL == object_full) {
         fprintf(stderr, "Failed to allocate memory for full object\n");
         return NULL;
@@ -46,9 +46,9 @@ constructModuleV2Heap(int _foo)
     (void) object_public; // Here would initialize public data
     object_private->foo = _foo;
 
-    printf("constructModuleV2Heap, object_full is: %p\n", object_full);
-    printf("constructModuleV2Heap, object_public is: %p\n", object_public);
-    printf("constructModuleV2Heap, object_private is: %p\n", object_private);
+    printf("constructDemoV2Heap, object_full is: %p\n", object_full);
+    printf("constructDemoV2Heap, object_public is: %p\n", object_public);
+    printf("constructDemoV2Heap, object_private is: %p\n", object_private);
 
     if ((void*) object_full != (void*) object_public) {
         fprintf(stderr, "Unexpected memory address for public field of module\n");
@@ -61,16 +61,16 @@ constructModuleV2Heap(int _foo)
 }
 
 void
-destroyModuleV2(struct ModulePublic* module_to_destroy_public)
+destroyDemoV2(struct DemoPublic* demo_to_destroy_public)
 {
-    struct Module* module_to_destroy =
-        (struct Module*) module_to_destroy_public;
+    struct Demo* demo_to_destroy =
+        (struct Demo*) demo_to_destroy_public;
 
-    free(module_to_destroy);
+    free(demo_to_destroy);
 }
 
 static void
-load_function_contextV2(struct ModulePublic* new_this)
+load_function_contextV2(struct DemoPublic* new_this)
 {
     if (NULL != this || NULL != this_private) {
         fprintf(stderr, "Previous context has not been unloaded. Please report this bug.");
@@ -78,7 +78,7 @@ load_function_contextV2(struct ModulePublic* new_this)
     }
 
     this = new_this;
-    this_private = &(((struct Module*) new_this)->private);
+    this_private = &(((struct Demo*) new_this)->private);
 }
 
 static void
@@ -98,7 +98,7 @@ validate_function_context(void)
 }
 
 static int
-add_to_fooV2(struct ModulePublic* object_public, int operand)
+add_to_fooV2(struct DemoPublic* object_public, int operand)
 {
     int result = 0;
 

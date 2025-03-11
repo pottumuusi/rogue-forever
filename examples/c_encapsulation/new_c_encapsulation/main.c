@@ -1,38 +1,38 @@
 /*
  * Scetching the idea of how to implement private data for modules.
  *
- * module_test_addToFoo(module_test);
+ * demo_test_addToFoo(demo_test);
  *
- * module_test.addToFoo();
- * module_test.addToFoo(module_test, 2);
- * module_test.foo; // This should produce an error.
+ * demo_test.addToFoo();
+ * demo_test.addToFoo(demo_test, 2);
+ * demo_test.foo; // This should produce an error.
  *
- * Having `module_test` twice in the statement looks clumsy. It would be
- * needed to write Module* as the first parameter of every function.
+ * Having `demo_test` twice in the statement looks clumsy. It would be
+ * needed to write Demo* as the first parameter of every function.
  *
- * ENTER_CONTEXT(module_test)
- * module_test.addToFoo();
+ * ENTER_CONTEXT(demo_test)
+ * demo_test.addToFoo();
  * EXIT_CONTEXT()
  *
  * How to assure exit for every enter? One way to assure is to grep and
  * check that there are as many enter calls as there are exit calls. Again
- * the repeated `module_test` looks clumsy. The repetition may look clumsy,
+ * the repeated `demo_test` looks clumsy. The repetition may look clumsy,
  * but it simultaneously acts as a sanity check. I.e. should enter
- * `module_test` context when proceeding to run `module_test` functions.
+ * `demo_test` context when proceeding to run `demo_test` functions.
  *
- * INVOKE_MODULE_FUNCTION(
- *     module_test,
+ * INVOKE_DEMO_FUNCTION(
+ *     demo_test,
  *     addToFoo,
  *     2)
- * -> module_test.addToFoo(module_test, 2)
+ * -> demo_test.addToFoo(demo_test, 2)
  *
- * Here it would be needed to write Module* as the first parameter of every
+ * Here it would be needed to write Demo* as the first parameter of every
  * function.
  *
- * SET_MODULE(module_test);
+ * SET_DEMO(demo_test);
  * SET_FUNCTION(addToFoo);
  * SET_ARGUMENTS(2);
- * INVOKE_MODULE_FUNCTION(); // Should finish by clearing the context.
+ * INVOKE_DEMO_FUNCTION(); // Should finish by clearing the context.
  *
  * Pass the arguments using heap memory instead of giving to function
  * call arguments.
@@ -60,7 +60,7 @@
  * should not contain any behavior, only data. The resulting call site could
  * look like the following:
  *
- * Module->add_to_foo(module_instance, 123);
+ * Demo->add_to_foo(demo_instance, 123);
  *
  * The signature of the function can be simplified (in an attempt to make it
  * easier to recall purpose of functions from minimal set of parameters) by
@@ -68,10 +68,10 @@
  * passed in some other way, such as static global variable. And here the
  * information hiding comes into play. Private data of the instance is made
  * easily accessible in the internal function. When private data is implemented
- * as a field of ModuleFull and ModulePublic is returned from the constructor,
- * it is possible to access private data outside the module. Accessing private
- * data outside its module is against design principles. I deem this private
- * data hiding to be sufficient to prevent accidental use outside their modules.
+ * as a field of Demo and DemoPublic is returned from the constructor, it is
+ * possible to access private data outside the module. Accessing private data
+ * outside its module is against design principles. I deem this private data
+ * hiding to be sufficient to prevent accidental use outside their modules.
  *
  * If it is wanted to prevent use of private data alltogether outside their
  * modules, return public instance pointer, have a static list of full module
@@ -83,9 +83,7 @@
  * https://en.wikipedia.org/wiki/C_syntax#Storage_class_specifiers
  */
 
-// TODO rename to Demo and revise the end of text
-
-#include "module.h"
+#include "demo.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -94,29 +92,29 @@
 // * DEBUG to be 1 in compiler flags for enabling debug features.
 // * INVALID_ACCESS_TO_PRIVATE_DATA to be 1 for producing a compilation error.
 
-extern struct ModuleInterface Module;
+extern struct DemoInterface Demo;
 
 int main(void)
 {
-    struct ModulePublic* object_module;
+    struct DemoPublic* object_module;
 
     int result;
 
     result = 0;
     object_module = NULL;
 
-    loadInterfaceModule();
+    loadInterfaceDemo();
 
-    object_module = constructModuleV2Heap(4);
+    object_module = constructDemoV2Heap(4);
 
-    result = Module.add_to_fooV2(object_module, 44);
+    result = Demo.add_to_fooV2(object_module, 44);
     printf("After calling add_to_foo, result is: %d\n", result);
 
 #if INVALID_ACCESS_TO_PRIVATE_DATA
     printf("object_module->foo is: %d", object_module->foo);
 #endif
 
-    destroyModuleV2(object_module);
+    destroyDemoV2(object_module);
     object_module = NULL;
 
     return 0;

@@ -1,29 +1,29 @@
 #ifndef MODULE_H_DEFINED
 #define MODULE_H_DEFINED
 
-struct ModulePublic {
+struct DemoPublic {
 };
 
-struct ModulePrivate {
+struct DemoPrivate {
     int foo;
 };
 
-struct Module {
-    struct ModulePublic public;
-    struct ModulePrivate private;
+struct Demo {
+    struct DemoPublic public;
+    struct DemoPrivate private;
 };
 
-struct ModuleInterface {
+struct DemoInterface {
     int (*add_to_foo) (int operand);
     int (*add_to_fooV2) (
-        struct ModulePublic* object_public,
+        struct DemoPublic* object_public,
         int operand);
 };
 
-void loadInterfaceModule(void);
+void loadInterfaceDemo(void);
 
-struct ModulePublic* constructModuleV2Heap(int _foo);
+struct DemoPublic* constructDemoV2Heap(int _foo);
 
-void destroyModuleV2(struct ModulePublic* module_to_destroy_public);
+void destroyDemoV2(struct DemoPublic* demo_to_destroy_public);
 
 #endif // MODULE_H_DEFINED
