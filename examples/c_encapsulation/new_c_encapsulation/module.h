@@ -14,6 +14,7 @@
 #ifndef MODULE_H_DEFINED
 #define MODULE_H_DEFINED
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define MODULE_GENERATE_CONTEXT_FUNCTIONS(struct_public, struct_full) \
