@@ -12,15 +12,46 @@
 #ifndef MODULE_H_DEFINED
 #define MODULE_H_DEFINED
 
-// TODO Have a single macro for generating all context functions.
+#include <stdint.h>
 
-// TODO consider renaming function_context to module_context
+#define MODULE_GENERATE_CONTEXT_FUNCTIONS(struct_public, struct_full) \
+    MODULE_GENERATE_DECLARATIONS(struct_public)                       \
+    MODULE_GENERATE_LOAD_CONTEXT(struct_public, struct_full)          \
+    MODULE_GENERATE_UNLOAD_CONTEXT                                    \
+    MODULE_GENERATE_VALIDATE_CONTEXT
 
-#define MODULE_GENERATE_DECLARATIONS           \
-    static void module_unload_context(void);   \
+#define MODULE_GENERATE_DECLARATIONS(struct_public)                \
+    static int32_t module_load_context(struct_public* new_this);   \
+    static void module_unload_context(void);                       \
     static void module_validate_context(void);
 
-// TODO rename unload_function_context -> module_unload_context
+#define MODULE_GENERATE_LOAD_CONTEXT(struct_public, struct_full)           \
+static int32_t                                                             \
+module_load_context(struct_public* new_this)                               \
+{                                                                          \
+    if (NULL != this_public || NULL != this_private) {                     \
+        fprintf(stderr, "Previous context has not been unloaded.");        \
+        return -1;                                                         \
+    }                                                                      \
+                                                                           \
+    if (NULL == new_this) {                                                \
+        fprintf(stderr, "Function context load received a null pointer."); \
+        return -1;                                                         \
+    }                                                                      \
+                                                                           \
+    if (&(((struct_full*) new_this)->public) != new_this) {                \
+        fprintf(                                                           \
+            stderr,                                                        \
+            "Function context load received an unrecognized pointer.");    \
+        return -1;                                                         \
+    }                                                                      \
+                                                                           \
+    this_public = new_this;                                                \
+    this_private = &((( struct_full *) new_this)->private);                \
+                                                                           \
+    return 0;                                                              \
+}
+
 #define MODULE_GENERATE_UNLOAD_CONTEXT \
 static void                            \
 module_unload_context(void)            \

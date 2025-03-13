@@ -8,14 +8,12 @@
 
 static int add_to_foo(int operand);
 
-static void load_function_context(struct Demo* new_this);
-
-MODULE_GENERATE_DECLARATIONS
-
 // Function context begin
 static struct Demo* this_public;
 static struct DemoPrivate* this_private;
 // Function context end
+
+MODULE_GENERATE_CONTEXT_FUNCTIONS(struct Demo, struct DemoFull)
 
 struct Demo*
 demo_construct_to_heap(int _foo)
@@ -63,22 +61,6 @@ demo_destroy(struct Demo* demo_to_destroy_public)
     free(demo_to_destroy);
 }
 
-static void
-load_function_context(struct Demo* new_this)
-{
-    if (NULL != this_public || NULL != this_private) {
-        fprintf(stderr, "Previous context has not been unloaded. Please report this bug.");
-        exit(1);
-    }
-
-    this_public = new_this;
-    this_private = &(((struct DemoFull*) new_this)->private);
-}
-
-MODULE_GENERATE_UNLOAD_CONTEXT
-
-MODULE_GENERATE_VALIDATE_CONTEXT
-
 int
 demo_add_to_foo(struct Demo* object_public, int operand)
 {
@@ -86,7 +68,7 @@ demo_add_to_foo(struct Demo* object_public, int operand)
 
     result = 0;
 
-    load_function_context(object_public);
+    module_load_context(object_public);
     result = add_to_foo(operand);
     module_unload_context();
 
