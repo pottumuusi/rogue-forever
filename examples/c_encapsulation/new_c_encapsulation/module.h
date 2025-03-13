@@ -7,6 +7,8 @@
  *
  * TODO write what is expected from the file that generates functions using the
  * macros defined here.
+ *
+ * TODO implement tests.
  */
 
 #ifndef MODULE_H_DEFINED
