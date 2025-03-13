@@ -6,8 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int add_to_foo(struct Demo* object_public, int operand);
-static int add_to_foo_internal(int operand);
+static int add_to_foo(int operand);
 
 static void load_function_context(struct Demo* new_this);
 
@@ -18,16 +17,8 @@ static struct Demo* this;
 static struct DemoPrivate* this_private;
 // Function context end
 
-struct DemoInterface Demo;
-
-void
-loadInterfaceDemo(void)
-{
-    Demo.add_to_foo = add_to_foo;
-}
-
 struct Demo*
-constructDemoHeap(int _foo)
+demo_construct_to_heap(int _foo)
 {
     struct DemoFull* object_full;
     struct Demo* object_public;
@@ -47,9 +38,11 @@ constructDemoHeap(int _foo)
     (void) object_public; // Here would initialize public data
     object_private->foo = _foo;
 
+#if DEBUG
     printf("constructDemoHeap, object_full is: %p\n", object_full);
     printf("constructDemoHeap, object_public is: %p\n", object_public);
     printf("constructDemoHeap, object_private is: %p\n", object_private);
+#endif
 
     if ((void*) object_full != (void*) object_public) {
         fprintf(stderr, "Unexpected memory address for public field of module\n");
@@ -62,7 +55,7 @@ constructDemoHeap(int _foo)
 }
 
 void
-destroyDemo(struct Demo* demo_to_destroy_public)
+demo_destroy(struct Demo* demo_to_destroy_public)
 {
     struct DemoFull* demo_to_destroy =
         (struct DemoFull*) demo_to_destroy_public;
@@ -86,22 +79,22 @@ MODULE_GENERATE_UNLOAD_FUNCTION_CONTEXT
 
 MODULE_GENERATE_VALIDATE_FUNCTION_CONTEXT
 
-static int
-add_to_foo(struct Demo* object_public, int operand)
+int
+demo_add_to_foo(struct Demo* object_public, int operand)
 {
-    int result = 0;
+    int result;
+
+    result = 0;
 
     load_function_context(object_public);
-
-    result = add_to_foo_internal(operand);
-
+    result = add_to_foo(operand);
     unload_function_context();
 
     return result;
 }
 
 static int
-add_to_foo_internal(int operand)
+add_to_foo(int operand)
 {
     validate_function_context();
 

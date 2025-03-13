@@ -83,6 +83,17 @@
  * possibility to find private counterpart for instances constructed with
  * automatic storage (stored to stack).
  * https://en.wikipedia.org/wiki/C_syntax#Storage_class_specifiers
+ *
+ * I came across a set of guidelines for developing safe C code: "The Power of
+ * Ten – Rules for Developing Safety Critical Code". The text can be found
+ * from: https://spinroot.com/gerard/pdf/P10.pdf. In the guidelines, use of
+ * function pointers is prohibited. I am going to conform and remove the use of
+ * function pointers in module interfacing, as they are not strictly necessary.
+ * In a game project I may still utilize function pointers as they can reduce
+ * code size due to their power of expression. When removing function pointer
+ * use, the module call becomes:
+ *
+ * demo_add_to_foo(demo_instance, 123);
  */
 
 #include "demo.h"
@@ -98,26 +109,24 @@ extern struct DemoInterface Demo;
 
 int main(void)
 {
-    struct Demo* object_module;
+    struct Demo* object_demo;
 
     int result;
 
     result = 0;
-    object_module = NULL;
+    object_demo = NULL;
 
-    loadInterfaceDemo();
+    object_demo = demo_construct_to_heap(4);
 
-    object_module = constructDemoHeap(4);
-
-    result = Demo.add_to_foo(object_module, 44);
-    printf("After calling add_to_foo, result is: %d\n", result);
+    result = demo_add_to_foo(object_demo, 44);
+    printf("After calling demo_add_to_foo, result is: %d\n", result);
 
 #if INVALID_ACCESS_TO_PRIVATE_DATA
-    printf("object_module->foo is: %d", object_module->foo);
+    printf("object_demo->foo is: %d", object_demo->foo);
 #endif
 
-    destroyDemo(object_module);
-    object_module = NULL;
+    demo_destroy(object_demo);
+    object_demo = NULL;
 
     return 0;
 }

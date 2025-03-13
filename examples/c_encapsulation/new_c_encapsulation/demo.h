@@ -13,16 +13,9 @@ struct DemoFull {
     struct DemoPrivate private;
 };
 
-struct DemoInterface {
-    int (*add_to_foo) (
-        struct Demo* object_public,
-        int operand);
-};
+struct Demo* demo_construct_to_heap(int _foo);
+void demo_destroy(struct Demo* demo_to_destroy_public);
 
-void loadInterfaceDemo(void);
-
-struct Demo* constructDemoHeap(int _foo);
-
-void destroyDemo(struct Demo* demo_to_destroy_public);
+int demo_add_to_foo(struct Demo* object_public, int operand);
 
 #endif // DEMO_H_DEFINED
