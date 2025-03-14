@@ -20,7 +20,7 @@
  * but it simultaneously acts as a sanity check. I.e. should enter
  * `demo_test` context when proceeding to run `demo_test` functions.
  *
- * INVOKE_DEMO_FUNCTION(
+ * INVOKE_MODULE_FUNCTION(
  *     demo_test,
  *     addToFoo,
  *     2)
@@ -29,7 +29,7 @@
  * Here it would be needed to write Demo* as the first parameter of every
  * function.
  *
- * SET_DEMO(demo_test);
+ * SET_MODULE(demo_test);
  * SET_FUNCTION(addToFoo);
  * SET_ARGUMENTS(2);
  * INVOKE_DEMO_FUNCTION(); // Should finish by clearing the context.
