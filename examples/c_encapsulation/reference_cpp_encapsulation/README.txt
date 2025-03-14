@@ -1,3 +1,10 @@
+See memory_location_of_member_variable/README.md contents for a continuation to
+this research. The material is in Finnish though. It was deduced, that object
+created from Module class gets stored to stack. With this in mind, it makes
+sense that member variable `foo` is in stack. Before a call to addToFoo, a
+stack address is stored to %rax using `lea`. This address is later dereferenced
+in addToFoo for accessing `foo`.
+
 (gdb) list 15
 10      {
 11          Module module = Module(222);

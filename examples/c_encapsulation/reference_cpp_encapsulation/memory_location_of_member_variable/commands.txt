@@ -1,0 +1,14 @@
+# Print memory map of a process.
+#
+# Memory map can be printed in gdb as well by running command `info proc
+# mappings`.
+pmap $(pidof module_test) &> module_test_memory_map.txt
+
+# Disassemble compiled executable for inspecting what actually gets ran.
+objdump --disassemble --disassembler-options=intel ./module_test
+
+# Add debug symbols to improve debugging with gdb.
+g++ -g ./*.cpp -o module_test
+
+# Generate assembly.
+g++ -S ./*.cpp
