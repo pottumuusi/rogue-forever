@@ -9,6 +9,15 @@ spritesheet were created using Tiled map editor.
 Tiled home page:
 https://www.mapeditor.org/
 
+## Table of contents
+* [How to install for playing the game](#how-to-install-for-playing-the-game)
+    * [Installing on Linux variants](#installing-on-linux-variants)
+        * [Installing on Debian Linux](#installing-on-debian-linux)
+    * [Installing on Windows](#installing-on-windows)
+* [How to install for developing the game](#how-to-install-for-developing-the-game)
+    * [Developing for Linux](#developing-for-linux)
+    * [Developing for Windows](#developing-for-windows)
+
 ## How to install for playing the game
 
 In order to run the game a main executable is required in addition to some
