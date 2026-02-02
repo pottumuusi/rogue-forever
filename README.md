@@ -12,8 +12,8 @@ spritesheet were created using Tiled map editor.
 Tiled home page:
 https://www.mapeditor.org/
 
-Game demo video:
-Coming soon!
+Latest game demo video:
+https://youtu.be/YfddFaBuZX0?si=XhXPM55lLoaM9ovy
 
 ## Table of contents
 * [How to install for playing the game](#how-to-install-for-playing-the-game)
