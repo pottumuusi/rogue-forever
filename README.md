@@ -2,6 +2,8 @@
 
 A dungeon crawler game.
 
+[![Rogue Forever commit gate](https://github.com/pottumuusi/rogue-forever/actions/workflows/rogue_forever_commit_gate.yml/badge.svg)](https://github.com/pottumuusi/rogue-forever/actions/workflows/rogue_forever_commit_gate.yml)
+
 Game currently consists of drawing a static image from a map representation file
 and a spritesheet. On top of this image, a player character placeholder is drawn
 to the coordinate 0, 0 in left upper corner. The map representation file and
