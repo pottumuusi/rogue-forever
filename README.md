@@ -12,7 +12,7 @@ spritesheet were created using Tiled map editor.
 Tiled home page:
 https://www.mapeditor.org/
 
-Latest game demo video:
+Latest game demo video:<br>
 https://youtu.be/YfddFaBuZX0?si=XhXPM55lLoaM9ovy
 
 ## Table of contents
