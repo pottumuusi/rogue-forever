@@ -1,5 +1,8 @@
 # Rogue Forever
+
 A dungeon crawler game.
+
+[![Rogue Forever commit gate](https://github.com/pottumuusi/rogue-forever/actions/workflows/rogue_forever_commit_gate.yml/badge.svg)](https://github.com/pottumuusi/rogue-forever/actions/workflows/rogue_forever_commit_gate.yml)
 
 Game currently consists of drawing a static image from a map representation file
 and a spritesheet. On top of this image, a player character placeholder is drawn
@@ -8,6 +11,9 @@ spritesheet were created using Tiled map editor.
 
 Tiled home page:
 https://www.mapeditor.org/
+
+Game demo video:
+Coming soon!
 
 ## Table of contents
 * [How to install for playing the game](#how-to-install-for-playing-the-game)
