@@ -9,7 +9,7 @@ and a spritesheet. On top of this image, a player character placeholder is drawn
 to the coordinate 0, 0 in left upper corner. The map representation file and
 spritesheet were created using Tiled map editor.
 
-Tiled home page:
+Tiled home page:<br>
 https://www.mapeditor.org/
 
 Latest game demo video:<br>
