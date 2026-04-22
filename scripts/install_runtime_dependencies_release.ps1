@@ -20,7 +20,7 @@ if ("TRUE" -ceq "$install_assets") {
     Write-Output 'Installing assets'
 
     Invoke-WebRequest `
-        -Uri http://gitlab.justworks.today/rogue-forever/$assets_zip `
+        -Uri http://www.justworks.today/rogue-forever/$assets_zip `
         -OutFile $download_destination\$assets_zip
 
     Expand-Archive $assets_zip -DestinationPath .\
@@ -30,7 +30,7 @@ if ("TRUE" -ceq "$install_maps") {
     Write-Output 'Installing maps'
 
     Invoke-WebRequest `
-        -Uri http://gitlab.justworks.today/rogue-forever/$maps_zip `
+        -Uri http://www.justworks.today/rogue-forever/$maps_zip `
         -OutFile $download_destination\$maps_zip
 
     Expand-Archive $maps_zip -DestinationPath .\
